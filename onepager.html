@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MercadoIQ — El foso de datos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1a18;--sec:#54534e;--mut:#8a887f;--line:rgba(0,0,0,.12);--bg:#faf9f5;--card:#ffffff;--acc:#185fa5;--accbg:#e6f1fb;--ok:#0f6e56;--okbg:#e1f5ee;--warnbg:#faeeda;--warn:#854f0b;}
+*{box-sizing:border-box}
+body{margin:0;background:#e9e8e2;font-family:'Inter',system-ui,sans-serif;color:var(--ink);font-size:13px;line-height:1.45;-webkit-font-smoothing:antialiased}
+.page{width:820px;min-height:900px;margin:24px auto;background:var(--bg);padding:38px 44px;box-shadow:0 2px 18px rgba(0,0,0,.12)}
+.top{display:flex;justify-content:space-between;align-items:center;border-bottom:1.5px solid var(--ink);padding-bottom:12px;margin-bottom:20px}
+.brand{display:flex;align-items:center;gap:9px;font-size:19px;font-weight:600}
+.brand .dot{width:22px;height:22px;border-radius:6px;background:var(--acc)}
+.tagchip{font-size:11px;color:var(--sec);border:1px solid var(--line);border-radius:99px;padding:4px 11px}
+h1{font-family:'Fraunces',Georgia,serif;font-size:29px;font-weight:500;line-height:1.15;margin:0 0 8px}
+h1 .hl{color:var(--acc)}
+.lede{font-size:14px;color:var(--sec);margin:0 0 22px;max-width:680px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 15px}
+.stat .n{font-family:'Fraunces',Georgia,serif;font-size:26px;font-weight:500;line-height:1}
+.stat .l{font-size:11.5px;color:var(--sec);margin-top:5px}
+.cols{display:grid;grid-template-columns:1fr 1.25fr;gap:22px;margin-bottom:22px}
+.h2{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);margin:0 0 10px}
+.moat p{margin:0 0 10px;font-size:13px;color:var(--ink)}
+.moat b{font-weight:600}
+.proof{display:flex;flex-direction:column;gap:11px}
+.pf{display:flex;gap:11px;align-items:flex-start}
+.pf .ic{flex:0 0 30px;width:30px;height:30px;border-radius:8px;background:var(--accbg);color:var(--acc);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;font-family:'Fraunces',serif}
+.pf .t{font-size:12.5px;line-height:1.4}
+.pf .t b{font-weight:600}
+.pf .t .big{color:var(--acc);font-weight:600}
+.band{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;border-top:1px solid var(--line);padding-top:18px;margin-bottom:18px}
+.band .h2{margin-bottom:6px}
+.band p{margin:0;font-size:12px;color:var(--sec)}
+.band b{color:var(--ink);font-weight:600}
+.foot{border-top:1.5px solid var(--ink);padding-top:12px;display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--sec)}
+.foot .demo{background:var(--ink);color:#fff;border-radius:7px;padding:7px 12px;font-size:11.5px}
+.note{font-size:10px;color:var(--mut);margin-top:14px;text-align:center}
+@media print{body{background:#fff}.page{box-shadow:none;margin:0;width:820px;min-height:900px}@page{size:820px 900px;margin:0}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="top">
+    <div class="brand"><span class="dot"></span>MercadoIQ</div>
+    <div class="tagchip">Inteligencia de compras públicas · Chile</div>
+  </div>
+
+  <h1>No somos otra app de licitaciones.<br><span class="hl">Somos los dueños del dato.</span></h1>
+  <p class="lede">El único dataset de compras públicas de Chile estructurado a nivel de línea de producto — 18 años de captura continua. Todos los demás compiten por avisar de datos públicos; nosotros sabemos a qué precio se gana, contra quién y con qué comprador.</p>
+
+  <div class="stats">
+    <div class="stat"><div class="n">2,7M</div><div class="l">licitaciones (2003–hoy)</div></div>
+    <div class="stat"><div class="n">29M</div><div class="l">órdenes de compra</div></div>
+    <div class="stat"><div class="n">37M</div><div class="l">adjudicaciones línea-producto</div></div>
+    <div class="stat"><div class="n">18 años</div><div class="l">de historial · actualizado al día</div></div>
+  </div>
+
+  <div class="cols">
+    <div class="moat">
+      <div class="h2">El foso</div>
+      <p><b>Imposible de comprar.</b> Estos datos ya no existen en ninguna API pública. Un competidor con capital ilimitado no puede adquirirlos — solo capturarlos día a día desde 2008, como hicimos nosotros.</p>
+      <p><b>Profundidad línea-producto.</b> 79M de líneas de compra con precio, 94,5% normalizadas. Eso permite responder preguntas que el resto no puede tocar.</p>
+      <p><b>Ya con ingresos.</b> 102 licencias activas / 185 usuarios pagando en el producto actual. Esto es la evolución, no un arranque de cero.</p>
+    </div>
+    <div>
+      <div class="h2">Qué desbloquea el dato</div>
+      <div class="proof">
+        <div class="pf"><div class="ic">$</div><div class="t"><b>Precio de referencia real.</b> Un análisis ingenuo da <b>$61</b> por un tóner (basura). Segmentado y limpio: <span class="big">$40.200</span>, sobre 224.765 compras reales.</div></div>
+        <div class="pf"><div class="ic">%</div><div class="t"><b>Probabilidad de ganar.</b> El más barato gana <span class="big">50%</span>; el promedio, solo 20% — y hay un acantilado al pasarse del precio típico. Le decimos al proveedor cuánto ofertar.</div></div>
+        <div class="pf"><div class="ic">!</div><div class="t"><b>Riesgo del comprador.</b> Sabemos qué organismo cancela o deja desierta su licitación: <span class="big">13%–30%</span> de desiertas, dato real de 29M de órdenes.</div></div>
+        <div class="pf"><div class="ic">◆</div><div class="t"><b>Inteligencia de competencia.</b> LATAM: 757k órdenes. Copec: $1,02 billones. Sabemos quién gana, dónde y a qué precio.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="band">
+    <div><div class="h2">Tracción</div><p><b>102 clientes</b> pagando · 185 usuarios activos · pipeline de datos vivo y al día.</p></div>
+    <div><div class="h2">Por qué ahora</div><p>El mercado gira a <b>compra ágil</b> (Ley 21.634, tope 100 UTM) y la <b>IA</b> recién hace viable explotar esta data.</p></div>
+    <div><div class="h2">El plan</div><p>De herramienta a <b>plataforma de inteligencia</b>; luego réplica a <b>Perú, Colombia, México</b>.</p></div>
+  </div>
+
+  <div class="foot">
+    <div>Demo interactiva en vivo, con datos reales de producción.</div>
+    <div class="demo">mercadoiq-demo.netlify.app</div>
+  </div>
+  <div class="note">Todas las cifras provienen de la base de datos de producción (18 años de Mercado Público). Documento confidencial.</div>
+</div>
+</body>
+</html>
