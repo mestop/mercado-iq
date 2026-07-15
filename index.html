@@ -94,11 +94,18 @@ body{margin:0;font-family:var(--font-sans);background:var(--surface-0);color:var
     <div class="logincard">
       <div style="font-size:15px;font-weight:500;margin-bottom:4px">Ingresa con tu RUT de proveedor</div>
       <div style="font-size:12.5px;color:var(--text-secondary);margin-bottom:16px">Cargamos tu perfil automáticamente desde tu historial real de ventas al Estado. Sin configurar nada.</div>
-      <button class="acct" id="acct1">
+      <button class="acct" data-t="ap">
         <div style="width:38px;height:38px;flex:0 0 38px;border-radius:50%;background:var(--bg-accent);color:var(--text-accent);display:flex;align-items:center;justify-content:center;font-weight:500;font-size:13px">AP</div>
         <div style="min-width:0">
           <div style="font-size:13px;font-weight:500;color:var(--text-primary)">Comercializadora y Distribuidora AP SpA</div>
           <div style="font-size:12px;color:var(--text-secondary)">RUT 77.646.274-8 · Insumos clínicos</div>
+        </div>
+      </button>
+      <button class="acct" data-t="nk">
+        <div style="width:38px;height:38px;flex:0 0 38px;border-radius:50%;background:var(--bg-accent);color:var(--text-accent);display:flex;align-items:center;justify-content:center;font-weight:500;font-size:13px">NK</div>
+        <div style="min-width:0">
+          <div style="font-size:13px;font-weight:500;color:var(--text-primary)">Distribuidora NKIRUKA SpA</div>
+          <div style="font-size:12px;color:var(--text-secondary)">RUT 76.739.855-7 · Equipos médicos</div>
         </div>
       </button>
       <button class="btn" id="enterBtn" style="margin-top:8px">Entrar</button>
@@ -119,14 +126,7 @@ body{margin:0;font-family:var(--font-sans);background:var(--surface-0);color:var
       <button data-s="alertas"><i class="ti ti-bell"></i>Alertas</button>
       <button data-s="copiloto"><i class="ti ti-sparkles"></i>Copiloto IA</button>
     </nav>
-    <div class="mine">
-      <div style="color:var(--text-muted);margin-bottom:4px">Tu empresa</div>
-      <div style="color:var(--text-primary);font-weight:500;line-height:1.35;margin-bottom:6px">Comercializadora y Distribuidora AP SpA</div>
-      <div>RUT <b>77.646.274-8</b></div>
-      <div><b>196</b> órdenes ganadas</div>
-      <div><b>$241 M</b> vendidos al Estado</div>
-      <div>activa desde <b>2023</b></div>
-    </div>
+    <div class="mine" id="sideMine"></div>
   </aside>
 
   <div class="main">
@@ -150,7 +150,7 @@ body{margin:0;font-family:var(--font-sans);background:var(--surface-0);color:var
         <div class="h2">Oportunidades abiertas</div>
         <div class="sub">Licitaciones y compras ágiles publicadas ahora, rankeadas por afinidad con lo que realmente vendes.</div>
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
-          <div class="mchip"><i class="ti ti-user-check" style="font-size:14px;vertical-align:-2px;margin-right:3px"></i>Perfil detectado: <b>insumos clínicos y quirúrgicos</b></div>
+          <div class="mchip" id="opPerfil"></div>
           <div class="mchip"><i class="ti ti-clock" style="font-size:14px;vertical-align:-2px;margin-right:3px"></i>Solo procesos <b>abiertos</b> · al 15 jul 2026</div>
           <button class="chip" id="famBtn"><i class="ti ti-category-2" style="font-size:14px;vertical-align:-2px"></i> Tus familias</button>
           <div class="seg" id="opfilter" style="margin-left:auto;display:inline-flex;border:.5px solid var(--border-strong);border-radius:var(--radius);overflow:hidden">
@@ -260,14 +260,9 @@ var num=function(v){return Number(v).toLocaleString('es-CL')};
 var big=function(v){return v>=1e12?('$'+(v/1e12).toLocaleString('es-CL',{maximumFractionDigits:2})+' bill.'):'$'+Math.round(v/1e6).toLocaleString('es-CL')+' M'};
 var moneyC=function(v){return v>=1e6?('$'+(Math.round(v/1e5)/10).toLocaleString('es-CL')+'M'):money(v)};
 
-/* ---- LOGIN ---- */
-function entrar(){document.getElementById('login').style.display='none';document.getElementById('app').classList.add('on');}
-document.getElementById('acct1').onclick=entrar;
-document.getElementById('enterBtn').onclick=entrar;
-
 /* ---- DATOS REALES DE AP SPA ---- */
 /* Productos que AP SPA realmente vende, con precio de referencia real (Mercado Público) */
-var DATA={
+var AP_DATA={
   planas:{label:'Planas quirúrgicas',name:'Planas quirúrgicas',unit:'unidad',n:2866,p25:1600,med:12400,p75:20000,mio:45589780,miasLineas:11},
   manta:{label:'Manta quirúrgica',name:'Manta quirúrgica / calentar soluciones',unit:'unidad',n:484,p25:7500,med:11500,p75:13590,mio:23443400,miasLineas:6},
   sabanas:{label:'Sábanas de hospital',name:'Sábanas de hospital',unit:'unidad',n:5246,p25:1500,med:2880,p75:4490,mio:22444600,miasLineas:10},
@@ -277,9 +272,15 @@ var DATA={
   gasas:{label:'Gasas quirúrgicas',name:'Gasas o curetas quirúrgicas',unit:'unidad',n:11509,p25:90,med:340,p75:4389,mio:4743500,miasLineas:20},
   vendas:{label:'Vendas de gasa',name:'Vendas de gasa',unit:'unidad',n:25228,p25:80,med:215,p75:1200,mio:3880500,miasLineas:7}
 };
-var cur='planas';
+/* Productos de NKIRUKA (solo 2: su historial real en Mercado Público es de 1 OC y 2 lineas adjudicadas) */
+var NK_DATA={
+ oxi:{label:'Accesorios de oxímetros',name:'Accesorios para sondas o sensores de oxímetros',unit:'unidad',n:5249,p25:15000,med:30000,p75:55000,mio:1830000,miasLineas:1},
+ deci:{label:'Medidor de decibelios',name:'Aparato de medición de sonido o medidor de decibelios',unit:'unidad',n:384,p25:35216,med:150000,p75:400000,mio:5928000,miasLineas:1}
+};
+var DATA=AP_DATA, cur='planas';
 var prods=document.getElementById('prods');
-prods.innerHTML=Object.keys(DATA).map(function(k){return '<button class="chip'+(k===cur?' on':'')+'" data-p="'+k+'">'+DATA[k].label+'</button>'}).join('');
+function renderProds(){prods.innerHTML=Object.keys(DATA).map(function(k){return '<button class="chip'+(k===cur?' on':'')+'" data-p="'+k+'">'+DATA[k].label+'</button>'}).join('');
+ prods.querySelectorAll('button').forEach(function(b){b.onclick=function(){cur=b.dataset.p;curProduct=null;prods.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');renderCard();}});}
 
 /* Curva de win-probability real (calibrada con 1,7M ofertas adjudicadas) */
 var WINCURVE=[[0.5,28.6],[0.675,26.9],[0.8,24.1],[0.89,21.5],[0.95,20.0],[1.0,20.1],[1.06,12.4],[1.175,9.4],[1.375,7.6],[1.8,5.6]];
@@ -311,34 +312,64 @@ function renderSim(p){
   function upd(){var x=+rng.value,pb=wp(x),px=(x-lo)/(hi-lo)*W,py=(1-pb)*H;document.getElementById('simPrice').textContent=money(x);document.getElementById('simProb').textContent=Math.round(pb*100)+'%';var mk=document.getElementById('simMk');mk.setAttribute('x1',px);mk.setAttribute('x2',px);var dt=document.getElementById('simDot');dt.setAttribute('cx',px);dt.setAttribute('cy',py);var diff=Math.round((x-p.med)/p.med*100);document.getElementById('simNote').innerHTML=diff<=0?('Ofertas '+Math.abs(diff)+'% <b>bajo</b> el precio de referencia — probabilidad al alza.'):('Ofertas '+diff+'% <b>sobre</b> la referencia — ojo: pasado el promedio, cada punto castiga fuerte.');}
   rng.oninput=upd;upd();
 }
-prods.querySelectorAll('button').forEach(function(b){b.onclick=function(){cur=b.dataset.p;curProduct=null;prods.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');renderCard();}});
 
 /* ---- FAMILIAS DE PATRONES ---- */
 /* El motor de familias (EMP_FAMILIA / EMP_FAMILIA_PATRON / EMP_FAMILIA_LIC) ya existe en la plataforma.
    Hoy las familias se definen A MANO. Aqui se PROPONEN automaticamente desde el historial real de ventas
    del RUT: cada familia agrupa productos que la empresa ya vendio al Estado. El usuario puede editarlas. */
-var FAM={
+var AP_FAM={
  ropa:{n:'Ropa quirúrgica desechable',pat:'plana quirurgic*|sabana*|cubre camilla*|protege sabana*|manta quirurgic*',prods:'Planas quirúrgicas · Sábanas de hospital · Cubre camillas · Protege sábanas · Manta quirúrgica',venta:121358480},
  gasas:{n:'Gasas y apósitos',pat:'gasa*|venda*|aposito*|curacion|esponja gelatina',prods:'Gasas quirúrgicas · Vendas de gasa · Esponjas de gelatina absorbible',venta:18453300},
  pabellon:{n:'Insumos de pabellón',pat:'insumo* clinic*|insumo* medic*|pabellon|set* quirurgic*|kit* preparacion|desbridamiento|lapiz*',prods:'Sets quirúrgicos · Kits de preparación · Desbridamiento · Lápices de cauterio · Esterilización',venta:17838400},
  aseo:{n:'Aseo e higiene',pat:'toalla* papel|cepillo* limpieza|esponja*|aseo|detergente',prods:'Toallas de papel · Cepillos de limpieza · Esponjas',venta:8218800}
 };
+/* Las 8 familias REALES de la cuenta Kiruka en la plataforma (EMP_FAMILIA / EMP_FAMILIA_PATRON, org 781012).
+   Escritas a mano, ultimo proceso del motor: 18 oct 2024. Patrones reales, recortados para que quepan. */
+var NK_FAM={
+ heridas:{n:'BSN Cuidado de Heridas',pat:'acquacel|acti coat|actioat|acticoat|actisorb|adaptic|adhesivo cierre heridas|alginato|algisite|allevyn|antimicrobiano|aposito venos*|espuma hidrofila|aposito carboximetil*…',prods:'Apósitos y curación avanzada',manual:1},
+ orto:{n:'BSN Ortopedia',pat:'acolchado ortopedico|acolchado yeso|actimove|cabestrillo|coban|coplus|cure tape|delta dry|delta lite|delta net|gypsona|ktape|leukotape|Mitella|scotchcast|sofban*|soffban*…',prods:'Yesos, vendajes y órtesis',manual:1},
+ compres:{n:'BSN Terapia Compresiva',pat:'antiemboli*|compresion antiembo*|antitrombo*|armsleeve|calceta compresiva|cintela|cintella|compresiva|comprilan|comprinet|media compres*|media ted|pie diabetico…',prods:'Medias y vendajes de compresión',manual:1,excl:'confite · golosina · colacion · tarjeta · formulario · talonario · podologia · cateter · monofilamento'},
+ m3:{n:'3M',pat:'70508|1527-1|90112|90303|90307|90301|91110|1535-1|90601|5642|3346e|4-100|90501|1294|attest|incubadora|transpore|tegaderm alginato|tegaderm foam|cavilon|steri gas…',prods:'Códigos y marcas 3M',manual:1},
+ ester:{n:'Esterilizacion',pat:'indicador biologico|tira multiparametro|tira autoclave|attest|atest|bowie dick|autoclave|control biologico|control quimico|insumos esterilizacion|termodesinfectadoras…',prods:'Control e insumos de esterilización',manual:1},
+ deter:{n:'Detergentes',pat:'detergente|enzimatico|cuatrienzimatico|pentaenzimatico|multienzimatico|Mediclean|Multizy*|Multizi*|Mediklar|Abrillantador|neodisher*|nodicher*',prods:'Detergentes enzimáticos',manual:1},
+ bota:{n:'bota descarga',pat:'bota descarga|bota diabet*|plantilla lego|plantilla descarga',prods:'Botas y plantillas de descarga',manual:1},
+ otros:{n:'Otros Kiruka',pat:'aposito silicona|askina silnet|askina barrier|aposito liquido|disiloxano|copolimero acrilico|hidrogel lavado|b.s.s|bss|solucion salina balanceada|irrigacion ocular|ocuchir',prods:'Apósitos de silicona e irrigación ocular',manual:1}
+};
+var FAM=AP_FAM;
 /* ---- OPORTUNIDADES REALES ABIERTAS (FH_CIERRE > hoy, 15 jul 2026) ---- */
 /* Filtradas por fecha de cierre real y estado, no por fecha de deteccion. */
-var OPP=[
- {t:'Licitación',cod:'3191-66-LE26',nom:'LE INS3 · Adquisición de insumos clínicos',monto:70000000,cat:'Salud',score:96,dias:5,cierre:'20 jul 2026',ref:DATA.gasas,fam:FAM.pabellon,hit:'insumo* clinic*',
+var AP_OPP=[
+ {t:'Licitación',cod:'3191-66-LE26',nom:'LE INS3 · Adquisición de insumos clínicos',monto:70000000,cat:'Salud',score:96,dias:5,cierre:'20 jul 2026',ref:AP_DATA.gasas,fam:AP_FAM.pabellon,hit:'insumo* clinic*',
   hist:'Ya ganaste el <b>LE INS2</b> (3191-3-LE26) de este mismo comprador, con sets de suministros quirúrgicos a $450. Este es el siguiente de la serie.'},
- {t:'Licitación',cod:'1057544-217-LP26',nom:'Compra por suministro de insumos clínicos para pabellones',monto:270000000,cat:'Salud',score:93,dias:5,cierre:'20 jul 2026',ref:DATA.planas,fam:FAM.pabellon,hit:'pabellon',
+ {t:'Licitación',cod:'1057544-217-LP26',nom:'Compra por suministro de insumos clínicos para pabellones',monto:270000000,cat:'Salud',score:93,dias:5,cierre:'20 jul 2026',ref:AP_DATA.planas,fam:AP_FAM.pabellon,hit:'pabellon',
   hist:'Tu mayor adjudicación histórica fue <b>Insumos para pabellón</b> (898-70-LQ24): planas quirúrgicas a $4.480, $48,4M. Mismo terreno.'},
- {t:'Licitación',cod:'1113159-11-L126',nom:'Insumos médicos',monto:6000000,cat:'Salud',score:78,dias:5,cierre:'20 jul 2026',ref:DATA.vendas,fam:FAM.pabellon,hit:'insumo* medic*'},
- {t:'Licitación',cod:'1499-129-LP26',nom:'RBV · Insumos clínicos para el cuidado de la piel',monto:348755000,cat:'Salud',score:71,dias:5,cierre:'20 jul 2026',ref:DATA.gelatina,fam:FAM.gasas,hit:'curacion'},
- {t:'Compra ágil',cod:'1641-4071-COT26',nom:'Lápiz marcador quirúrgico estéril con regla',monto:100000,cat:'Salud',score:68,dias:1,cierre:'16 jul 2026',ref:DATA.gasas,fam:FAM.pabellon,hit:'lapiz*',
+ {t:'Licitación',cod:'1113159-11-L126',nom:'Insumos médicos',monto:6000000,cat:'Salud',score:78,dias:5,cierre:'20 jul 2026',ref:AP_DATA.vendas,fam:AP_FAM.pabellon,hit:'insumo* medic*'},
+ {t:'Licitación',cod:'1499-129-LP26',nom:'RBV · Insumos clínicos para el cuidado de la piel',monto:348755000,cat:'Salud',score:71,dias:5,cierre:'20 jul 2026',ref:AP_DATA.gelatina,fam:AP_FAM.gasas,hit:'curacion'},
+ {t:'Compra ágil',cod:'1641-4071-COT26',nom:'Lápiz marcador quirúrgico estéril con regla',monto:100000,cat:'Salud',score:68,dias:1,cierre:'16 jul 2026',ref:AP_DATA.gasas,fam:AP_FAM.pabellon,hit:'lapiz*',
   hist:'Ya adjudicaste <b>lápices quirúrgicos de cauterio</b> (1057472-122-LP25).'},
- {t:'Licitación',cod:'4407-21-L126',nom:'Insumos médicos para abastecer farmacia del CESFAM',monto:1500000,cat:'Salud',score:64,dias:5,cierre:'20 jul 2026',ref:DATA.vendas,fam:FAM.pabellon,hit:'insumo* medic*'},
- {t:'Licitación',cod:'1180747-10-LE26',nom:'Adquisición instrumental quirúrgico CECOSF · nuevo llamado',monto:22617000,cat:'Equipamiento',score:52,dias:2,cierre:'17 jul 2026',ref:DATA.planas,fam:FAM.pabellon,hit:'set* quirurgic*',debil:1,dir:1},
- {t:'Licitación',cod:'1070620-68-LE26',nom:'VRC · Suministro de instrumental microquirúrgico',monto:69751000,cat:'Equipamiento',score:34,dias:2,cierre:'17 jul 2026',ref:DATA.planas,fam:FAM.pabellon,hit:'set* quirurgic*',debil:1},
- {t:'Licitación',cod:'3391-13-LR26',nom:'Suministro de reactivos e insumos para laboratorio clínico',monto:692657533,cat:'Laboratorio',score:16,dias:2,cierre:'17 jul 2026',ref:DATA.gasas,fam:null}
+ {t:'Licitación',cod:'4407-21-L126',nom:'Insumos médicos para abastecer farmacia del CESFAM',monto:1500000,cat:'Salud',score:64,dias:5,cierre:'20 jul 2026',ref:AP_DATA.vendas,fam:AP_FAM.pabellon,hit:'insumo* medic*'},
+ {t:'Licitación',cod:'1180747-10-LE26',nom:'Adquisición instrumental quirúrgico CECOSF · nuevo llamado',monto:22617000,cat:'Equipamiento',score:52,dias:2,cierre:'17 jul 2026',ref:AP_DATA.planas,fam:AP_FAM.pabellon,hit:'set* quirurgic*',debil:1,dir:1},
+ {t:'Licitación',cod:'1070620-68-LE26',nom:'VRC · Suministro de instrumental microquirúrgico',monto:69751000,cat:'Equipamiento',score:34,dias:2,cierre:'17 jul 2026',ref:AP_DATA.planas,fam:AP_FAM.pabellon,hit:'set* quirurgic*',debil:1},
+ {t:'Licitación',cod:'3391-13-LR26',nom:'Suministro de reactivos e insumos para laboratorio clínico',monto:692657533,cat:'Laboratorio',score:16,dias:2,cierre:'17 jul 2026',ref:AP_DATA.gasas,fam:null}
 ];
+/* Oportunidades de NKIRUKA. El contraste es el argumento:
+   - auto:1  -> las trae su historial REAL de ventas (equipos medicos). Sus familias no las verian.
+   - stale:1 -> las traen sus familias manuales, de lineas que ya no vende.
+   - fp:1    -> falsos positivos reales del patron 'repuesto'. */
+var NK_OPP=[
+ {t:'Licitación',cod:'1057547-271-LP26',nom:'Convenio suministro y repuestos para unidad de equipos médicos',monto:175000000,cat:'Equipamiento',score:94,dias:2,cierre:'17 jul 2026',ref:NK_DATA.oxi,fam:null,auto:1,
+  hist:'Es tu línea real: ya adjudicaste <b>repuestos para equipos médicos</b> (1063538-4-LE26), y encima sin competencia.'},
+ {t:'Licitación',cod:'1057491-137-LE26',nom:'Oxímetros de pulso portátil para saturometría',monto:7500000,cat:'Equipamiento',score:91,dias:2,cierre:'17 jul 2026',ref:NK_DATA.oxi,fam:null,auto:1,
+  hist:'Vendiste <b>accesorios de oxímetros a $610.000</b> siendo el único oferente. Mismo producto, mismo terreno.'},
+ {t:'Licitación',cod:'2215-37-LE26',nom:'Insumos para central de esterilización',monto:50000000,cat:'Esterilización',score:38,dias:5,cierre:'20 jul 2026',ref:NK_DATA.oxi,fam:NK_FAM.ester,hit:'insumos esterilizacion',stale:1},
+ {t:'Licitación',cod:'608-121-LR26',nom:'IMF · Convenio de mantención de equipos de esterilización',monto:479550915,cat:'Esterilización',score:31,dias:5,cierre:'20 jul 2026',ref:NK_DATA.oxi,fam:NK_FAM.ester,hit:'autoclave',stale:1},
+ {t:'Licitación',cod:'1180740-7-LE26',nom:'Autoclave horizontal para fórmulas lácteas',monto:43098155,cat:'Esterilización',score:24,dias:2,cierre:'17 jul 2026',ref:NK_DATA.oxi,fam:NK_FAM.ester,hit:'autoclave',stale:1},
+ {t:'Licitación',cod:'4562-20-LE26',nom:'Contratación servicio plan nacional de esterilizaciones',monto:28600000,cat:'Esterilización',score:19,dias:2,cierre:'17 jul 2026',ref:NK_DATA.oxi,fam:NK_FAM.ester,hit:'esteriliza',stale:1},
+ {t:'Licitación',cod:'2790-40-L126',nom:'Mantenimiento de equipos autoclave',monto:7058800,cat:'Esterilización',score:17,dias:2,cierre:'17 jul 2026',ref:NK_DATA.oxi,fam:NK_FAM.ester,hit:'autoclave',stale:1},
+ {t:'Licitación',cod:'2585-71-LE26',nom:'Adquisición de repuestos para camionetas DIMAO',monto:30260000,cat:'Vehículos',score:6,dias:5,cierre:'20 jul 2026',ref:NK_DATA.oxi,fam:null,fp:1,hit:'repuesto'},
+ {t:'Licitación',cod:'2272-7-LE26',nom:'Adquisición repuesto extinguisher fire aeronave Citation V',monto:9880000,cat:'Aeronáutica',score:4,dias:5,cierre:'20 jul 2026',ref:NK_DATA.oxi,fam:null,fp:1,hit:'repuesto'}
+];
+var OPP=AP_OPP;
 var DIRSIG=['El organismo adjudicó los últimos 3 procesos del rubro al mismo proveedor.','Especificaciones técnicas compatibles con un único fabricante.','Plazo de postulación acotado — menos de 7 días corridos.'];
 var opf='todas';
 function sColor(s){return s>=85?'success':(s>=60?'accent':'gray')}
@@ -350,18 +381,30 @@ function renderOpp(){
     var tag=o.t==='Compra ágil'?'<span style="color:var(--text-accent)">Compra ágil</span>':'Licitación';
     var urg=o.dias<=2?'color:var(--text-danger);font-weight:500':'color:var(--text-secondary)';
     var pl=o.dias===1?'día':'días';
-    var fam=o.fam?('<span style="background:var(--bg-accent);color:var(--text-accent);border-radius:99px;padding:1px 8px;font-size:11px;white-space:nowrap">'+(o.debil?'~ ':'')+o.fam.n+'</span>'):'<span style="background:var(--surface-1);color:var(--text-muted);border-radius:99px;padding:1px 8px;font-size:11px;white-space:nowrap">sin familia</span>';
+    var fam=o.auto?'<span style="background:var(--bg-success);color:var(--text-success);border-radius:99px;padding:1px 8px;font-size:11px;white-space:nowrap"><i class="ti ti-history" style="font-size:11px"></i> tu historial</span>'
+     :(o.fp?'<span style="background:var(--bg-danger);color:var(--text-danger);border-radius:99px;padding:1px 8px;font-size:11px;white-space:nowrap">falso positivo</span>'
+     :(o.fam?('<span style="background:'+(o.stale?'var(--bg-warning)':'var(--bg-accent)')+';color:'+(o.stale?'var(--text-warning)':'var(--text-accent)')+';border-radius:99px;padding:1px 8px;font-size:11px;white-space:nowrap">'+(o.debil?'~ ':'')+o.fam.n+(o.stale?' ⚠':'')+'</span>')
+     :'<span style="background:var(--surface-1);color:var(--text-muted);border-radius:99px;padding:1px 8px;font-size:11px;white-space:nowrap">sin familia</span>'));
     return '<div class="row" data-cod="'+o.cod+'"><div style="min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+o.nom+(o.dir?' <i class="ti ti-flag" style="color:var(--text-warning);font-size:13px"></i>':'')+(o.hist?' <i class="ti ti-history" style="color:var(--text-success);font-size:13px"></i>':'')+'</div><div style="font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:6px;margin-top:2px">'+fam+'<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+tag+' · '+money(o.monto)+' · <span style="'+urg+'">cierra en '+o.dias+' '+pl+'</span> · '+o.cod+'</span></div></div><div class="badge" style="'+bs+'"><div class="n">'+o.score+'</div><div class="t">score</div></div></div>';
   }).join('');
   document.querySelectorAll('#oportList .row').forEach(function(r){r.onclick=function(){showOpp(r.dataset.cod)}});
 }
 var famPanel=document.getElementById('famPanel');
-famPanel.innerHTML='<div style="font-size:14px;font-weight:500;margin-bottom:3px">Tus familias de patrones</div>'
- +'<div style="font-size:12.5px;color:var(--text-secondary);margin-bottom:14px">Propuestas <b>automáticamente</b> desde tu historial real de ventas: cada familia agrupa productos que ya le vendiste al Estado. Puedes editarlas cuando quieras.</div>'
- +Object.keys(FAM).map(function(k){var f=FAM[k];var n=OPP.filter(function(o){return o.fam===f}).length;
-   return '<div style="border:.5px solid var(--border);border-radius:var(--radius);padding:11px 13px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px"><span style="font-size:13px;font-weight:500">'+f.n+'</span><span style="font-size:11.5px;color:var(--text-secondary)">'+big(f.venta)+' vendidos · <b style="color:var(--text-accent)">'+n+'</b> oportunidad'+(n===1?'':'es')+' hoy</span></div><div style="font-size:11.5px;color:var(--text-secondary);line-height:1.6"><code style="background:var(--surface-1);border-radius:4px;padding:1px 6px">'+f.pat+'</code><br>'+f.prods+'</div></div>';
- }).join('')
- +'<div style="background:var(--bg-success);color:var(--text-success);border-radius:var(--radius);padding:10px 13px;font-size:12.5px;line-height:1.55;margin-top:4px"><i class="ti ti-wand" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Sin configurar nada: se derivan de lo que realmente vendiste. Nada de escribir 40 patrones a mano ni de ir añadiendo exclusiones cada vez que se cuela un falso positivo.</div>';
+function renderFamPanel(){
+  var man=CUR.famManual;
+  famPanel.innerHTML='<div style="font-size:14px;font-weight:500;margin-bottom:3px">Tus familias de patrones</div>'
+   +'<div style="font-size:12.5px;color:var(--text-secondary);margin-bottom:14px">'+(man
+     ? 'Las <b>8 familias de tu cuenta</b> en la plataforma, escritas <b>a mano</b>. El motor las procesó por última vez el <b>18 de octubre de 2024</b>.'
+     : 'Propuestas <b>automáticamente</b> desde tu historial real de ventas: cada familia agrupa productos que ya le vendiste al Estado. Puedes editarlas cuando quieras.')+'</div>'
+   +(man?'<div style="background:var(--bg-warning);color:var(--text-warning);border-radius:var(--radius);padding:10px 13px;font-size:12.5px;line-height:1.55;margin-bottom:12px"><i class="ti ti-alert-triangle" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i><b>Tus familias ya no reflejan lo que vendes.</b> Están escritas para curación de heridas, ortopedia y compresión (BSN, 3M), pero tus ventas reales al Estado son <b>equipos médicos y repuestos</b>. Por eso te traen autoclaves y no oxímetros.</div>':'')
+   +Object.keys(FAM).map(function(k){var f=FAM[k];var n=OPP.filter(function(o){return o.fam===f}).length;
+     var meta=man?('<b style="color:'+(n?'var(--text-warning)':'var(--text-muted)')+'">'+n+'</b> oportunidad'+(n===1?'':'es')+' hoy'):(big(f.venta)+' vendidos · <b style="color:var(--text-accent)">'+n+'</b> oportunidad'+(n===1?'':'es')+' hoy');
+     return '<div style="border:.5px solid var(--border);border-radius:var(--radius);padding:11px 13px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px"><span style="font-size:13px;font-weight:500">'+f.n+'</span><span style="font-size:11.5px;color:var(--text-secondary)">'+meta+'</span></div><div style="font-size:11.5px;color:var(--text-secondary);line-height:1.6"><code style="background:var(--surface-1);border-radius:4px;padding:1px 6px">'+f.pat+'</code><br>'+f.prods+(f.excl?'<br><span style="color:var(--text-danger)">exclusiones añadidas a mano: '+f.excl+'</span>':'')+'</div></div>';
+   }).join('')
+   +(man
+     ? '<div style="background:var(--surface-1);border-radius:var(--radius);padding:11px 13px;font-size:12.5px;line-height:1.6;margin-top:4px"><i class="ti ti-alert-triangle" style="font-size:14px;vertical-align:-2px;margin-right:4px;color:var(--text-warning)"></i>Mira el coste de mantener esto a mano: <code style="background:var(--surface-2);border-radius:4px;padding:1px 5px">cintela|cintella</code>, <code style="background:var(--surface-2);border-radius:4px;padding:1px 5px">attest|atest</code>, <code style="background:var(--surface-2);border-radius:4px;padding:1px 5px">neodisher*|nodicher*</code> — alguien fue anotando <b>las erratas de los compradores</b> una por una. Y en Terapia Compresiva hubo que excluir <i>confite</i>, <i>golosina</i> y <i>colación</i> porque se colaban.</div>'
+     : '<div style="background:var(--bg-success);color:var(--text-success);border-radius:var(--radius);padding:10px 13px;font-size:12.5px;line-height:1.55;margin-top:4px"><i class="ti ti-wand" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Sin configurar nada: se derivan de lo que realmente vendiste. Nada de escribir 40 patrones a mano ni de ir añadiendo exclusiones cada vez que se cuela un falso positivo.</div>');
+}
 document.getElementById('famBtn').onclick=function(){famPanel.style.display=famPanel.style.display==='none'?'block':'none';};
 document.querySelectorAll('#opfilter button').forEach(function(b){b.onclick=function(){opf=b.dataset.f;document.querySelectorAll('#opfilter button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');renderOpp();document.getElementById('oportDetail').innerHTML='';}});
 
@@ -388,9 +431,17 @@ function showOpp(cod){
   var bases='<div style="border:.5px solid var(--border);border-radius:var(--radius);padding:12px;margin-top:12px"><div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px"><i class="ti ti-message-question" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Pregunta sobre esta oportunidad y sus bases</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">'+['¿Qué garantía piden?','¿Cuándo cierra?','¿Cómo se evalúa?'].map(function(q){return '<button class="chip" data-oq="'+q+'">'+q+'</button>'}).join('')+'</div><div id="oppQAns" style="margin-bottom:8px"></div>'+basesBtn+'</div>';
   var dirP=o.dir?'<div style="background:var(--bg-warning);color:var(--text-warning);border-radius:var(--radius);padding:10px 13px;font-size:13px;line-height:1.55;margin-top:12px"><i class="ti ti-flag" style="font-size:15px;vertical-align:-2px;margin-right:5px"></i><b>Posible licitación dirigida</b> — señales: '+DIRSIG.map(function(s){return s.replace(/\.$/,'')}).join(' · ')+'.</div>':'';
   var histP=o.hist?'<div style="background:var(--bg-success);color:var(--text-success);border-radius:var(--radius);padding:10px 13px;font-size:13px;line-height:1.55;margin-top:12px"><i class="ti ti-history" style="font-size:15px;vertical-align:-2px;margin-right:5px"></i><b>Tu historial juega a favor.</b> '+o.hist+'</div>':'';
-  var famP=o.fam
-   ? '<div style="border:.5px solid var(--border);border-radius:var(--radius);padding:12px;margin-top:12px"><div style="font-size:12px;color:var(--text-secondary);margin-bottom:7px"><i class="ti ti-category-2" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Por qué te la mostramos — familia que hizo match</div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px"><span style="background:var(--bg-accent);color:var(--text-accent);border-radius:99px;padding:3px 11px;font-size:12.5px;font-weight:500">'+o.fam.n+'</span>'+(o.debil?'<span style="font-size:11.5px;color:var(--text-warning)">match débil — solo por un patrón genérico</span>':'')+'</div><div style="font-size:12px;color:var(--text-secondary);line-height:1.6">Patrón que coincidió: <code style="background:var(--surface-1);border-radius:4px;padding:1px 6px;color:var(--text-primary)">'+o.hit+'</code><br>Productos de la familia: '+o.fam.prods+'<br>Ya vendiste <b style="color:var(--text-primary)">'+big(o.fam.venta)+'</b> de esta familia al Estado.</div></div>'
-   : '<div style="background:var(--surface-1);border-radius:var(--radius);padding:10px 13px;font-size:13px;line-height:1.55;margin-top:12px;color:var(--text-secondary)"><i class="ti ti-category-2" style="font-size:15px;vertical-align:-2px;margin-right:5px"></i><b style="color:var(--text-primary)">Ninguna de tus familias hace match.</b> Por eso el score es '+o.score+': no vendes reactivos de laboratorio. Aparece solo porque comparte el rubro salud.</div>';
+  var famP;
+  if(o.auto){
+    famP='<div style="background:var(--bg-success);color:var(--text-success);border-radius:var(--radius);padding:10px 13px;font-size:13px;line-height:1.55;margin-top:12px"><i class="ti ti-history" style="font-size:15px;vertical-align:-2px;margin-right:5px"></i><b>Te la trae tu historial real, no tus familias.</b> Ninguna de tus 8 familias la habría encontrado — están escritas para curación de heridas, no para equipos médicos. La detectamos porque es lo que <b>de verdad</b> vendes.</div>';
+  } else if(o.fp){
+    famP='<div style="background:var(--bg-danger);color:var(--text-danger);border-radius:var(--radius);padding:10px 13px;font-size:13px;line-height:1.55;margin-top:12px"><i class="ti ti-alert-triangle" style="font-size:15px;vertical-align:-2px;margin-right:5px"></i><b>Falso positivo del patrón <code>repuesto</code>.</b> Esto no es material clínico. Con familias manuales, alguien tendría que darse cuenta y añadir una exclusión a mano — una más de la lista.</div>';
+  } else if(o.fam){
+    famP='<div style="border:.5px solid var(--border);border-radius:var(--radius);padding:12px;margin-top:12px"><div style="font-size:12px;color:var(--text-secondary);margin-bottom:7px"><i class="ti ti-category-2" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Por qué te la mostramos — familia que hizo match</div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px"><span style="background:'+(o.stale?'var(--bg-warning)':'var(--bg-accent)')+';color:'+(o.stale?'var(--text-warning)':'var(--text-accent)')+';border-radius:99px;padding:3px 11px;font-size:12.5px;font-weight:500">'+o.fam.n+'</span>'+(o.debil?'<span style="font-size:11.5px;color:var(--text-warning)">match débil — solo por un patrón genérico</span>':'')+'</div><div style="font-size:12px;color:var(--text-secondary);line-height:1.6">Patrón que coincidió: <code style="background:var(--surface-1);border-radius:4px;padding:1px 6px;color:var(--text-primary)">'+o.hit+'</code><br>Productos de la familia: '+o.fam.prods+(o.fam.venta?'<br>Ya vendiste <b style="color:var(--text-primary)">'+big(o.fam.venta)+'</b> de esta familia al Estado.':'')+'</div>'
+     +(o.stale?'<div style="background:var(--bg-warning);color:var(--text-warning);border-radius:var(--radius);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-top:10px"><i class="ti ti-alert-triangle" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i><b>Familia obsoleta.</b> Te la trae un patrón escrito a mano hace años, pero <b>tú ya no vendes esto</b>: tus ventas reales son equipos médicos y repuestos. Por eso el score es solo '+o.score+'.</div>':'')+'</div>';
+  } else {
+    famP='<div style="background:var(--surface-1);border-radius:var(--radius);padding:10px 13px;font-size:13px;line-height:1.55;margin-top:12px;color:var(--text-secondary)"><i class="ti ti-category-2" style="font-size:15px;vertical-align:-2px;margin-right:5px"></i><b style="color:var(--text-primary)">Ninguna de tus familias hace match.</b> Por eso el score es '+o.score+': no vendes reactivos de laboratorio. Aparece solo porque comparte el rubro salud.</div>';
+  }
   var pl=o.dias===1?'día':'días', uc=o.dias<=2?'danger':'accent';
   document.getElementById('oportDetail').innerHTML='<div class="card"><div style="display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:12px"><div><div style="font-size:15px;font-weight:500">'+o.nom+'</div><div style="font-size:12px;color:var(--text-secondary)">'+o.t+' · '+o.cod+' · presupuesto '+money(o.monto)+'</div></div><div style="text-align:right;flex:0 0 auto"><span class="mchip">score '+o.score+'</span><div style="font-size:11.5px;margin-top:5px;color:var(--text-'+uc+')">cierra en '+o.dias+' '+pl+' · '+o.cierre+'</div></div></div><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">'+ref+comp+orga+'</div>'+famP+histP+probBlock+bases+dirP+'</div>';
   document.querySelectorAll('#oportDetail [data-oq]').forEach(function(b){b.onclick=function(){document.getElementById('oppQAns').innerHTML='<div style="background:var(--surface-1);border-radius:var(--radius);padding:9px 11px;font-size:12.5px;line-height:1.5"><i class="ti ti-sparkles" style="font-size:13px;vertical-align:-2px;margin-right:4px;color:var(--text-accent)"></i>'+ans[b.dataset.oq]+'</div>';}});
@@ -398,8 +449,29 @@ function showOpp(cod){
 
 /* ---- POSTULACIONES REALES de AP SPA (ofertas y adjudicaciones de Mercado Público) ---- */
 /* Fuente: LIC_ADJ_PROD_PROVEEDORES — cada bloque es una línea real, con todos sus oferentes y el ganador real. */
-var PSTATS={total:41,ganadas:16,tasa:39,adjudicado:236932528};
-var POST=[
+var AP_PSTATS={total:41,ganadas:16,tasa:39,adjudicado:236932528};
+var NK_PSTATS={total:2,ganadas:2,tasa:100,adjudicado:7758000};
+/* Las 2 postulaciones reales de NKIRUKA, con los oferentes reales de cada linea. */
+var NK_POST=[
+ {cod:'1079650-44-LE23',nom:'Adquisición de equipamiento para HGGB',prod:'Medidor de decibelios',qty:1,cierre:'10 jul 2023',gane:1,total:5928000,
+  bids:[{n:'International Clinics',p:1450000},{n:'Neurovirtual Chile',p:4381800},{n:'Tú (NKIRUKA)',p:5928000,w:1,me:1},{n:'Ecodata',p:5980000}],
+  ins:'Ganaste siendo el <b>tercero más caro de cuatro</b>. International Clinics ofertó <b>$1.450.000</b> — cuatro veces menos que tú — y perdió. Aquí el precio no decidió: decidió la propuesta técnica.'},
+ {cod:'1063538-4-LE26',nom:'Adquisición de repuestos para equipos médicos',prod:'Accesorios para sondas de oxímetros',qty:3,cierre:'11 feb 2026',gane:1,total:1830000,
+  bids:[{n:'Tú (NKIRUKA)',p:610000,w:1,me:1}],
+  ins:'Ganaste <b>sin competencia</b>: único oferente. Cobraste <b>$610.000</b> por unidad cuando la referencia del mercado es <b>$30.000</b> — <b>20 veces más</b>. Sin rivales, el precio de referencia deja de mandar.'}
+];
+/* Rivales reales de NKIRUKA (los que enfrento en su unica linea con competencia). */
+var NK_SUP=[
+ {s:'Ecodata',name:'Ecodata Sociedad por Acciones',oferta:5980000,res:0},
+ {s:'Tú (NKIRUKA)',name:'Distribuidora NKIRUKA SpA',oferta:5928000,res:1,me:1},
+ {s:'Neurovirtual',name:'Neurovirtual Chile Limitada',oferta:4381800,res:0},
+ {s:'International Clinics',name:'International Clinics S.A.',oferta:1450000,res:0}
+];
+var NK_ORG=[
+ {name:'Servicio de Salud de Concepción',short:'S.S. de Concepción',rut:'61.607.100-9',n:17003,anul:'1,78%',lvl:'Bajo',miCompra:7054320,misOC:1,hosp:'Hospital Guillermo Grant Benavente'}
+];
+var PSTATS=AP_PSTATS;
+var AP_POST=[
  {cod:'1057539-162-LR25',nom:'Convenio de suministro de insumos de rehabilitación',prod:'Cubre camillas',qty:54000,cierre:'29 ago 2025',gane:1,total:104490000,
   bids:[{n:'Tú (AP SpA)',p:1935,w:1,me:1},{n:'Munnich Pharma Medical',p:2254},{n:'Greenwich Medical',p:2300},{n:'Distribuidora Papeles Industriales',p:2425},{n:'Comercial LBF',p:4250},{n:'Comerc. de Tecnologías Médicas',p:11048}],
   ins:'Ganaste siendo el más barato de 6 oferentes. Pero el segundo (Munnich) ofertó <b>$2.254</b>: podías haber cobrado hasta ~$2.250 y ganar igual — <b>dejaste unos $17,2M sobre la mesa</b>.'},
@@ -431,7 +503,8 @@ var POST=[
   bids:[{n:'Munnich Pharma Medical',p:16.9,w:1},{n:'Inmed Droguería',p:17},{n:'SCM Pharma',p:18},{n:'Reutter',p:18},{n:'Tú (AP SpA)',p:19,me:1},{n:'Coldiab',p:37},{n:'Comercial Intermédica',p:40},{n:'Dist. Productos de Laboratorio',p:57}],
   ins:'Perdiste por <b>$2,1</b> en un producto de altísima competencia: 8 oferentes apretados entre $16,9 y $19. En guantes no eres competitivo.'}
 ];
-document.getElementById('postStats').innerHTML=[['Postulaciones',PSTATS.total],['Adjudicadas',PSTATS.ganadas],['Tasa de éxito',PSTATS.tasa+'%'],['Adjudicado',big(PSTATS.adjudicado)]].map(function(m){return '<div class="metric"><div class="l">'+m[0]+'</div><div class="v">'+m[1]+'</div></div>'}).join('');
+var POST=AP_POST;
+function renderPStats(){document.getElementById('postStats').innerHTML=[['Postulaciones',PSTATS.total],['Adjudicadas',PSTATS.ganadas],['Tasa de éxito',PSTATS.tasa+'%'],['Adjudicado',big(PSTATS.adjudicado)]].map(function(m){return '<div class="metric"><div class="l">'+m[0]+'</div><div class="v">'+m[1]+'</div></div>'}).join('');}
 var pf='todas';
 function renderPost(){
   if(pf==='abiertas'){
@@ -467,7 +540,7 @@ function showPost(cod){
   var sorted=o.bids.slice().sort(function(a,b){return a.p-b.p}), rank=sorted.indexOf(mine)+1;
   var head=o.gane?('<i class="ti ti-trophy" style="font-size:15px;vertical-align:-2px;margin-right:4px"></i>Adjudicada — '+money(o.total)):('<i class="ti ti-x" style="font-size:15px;vertical-align:-2px;margin-right:4px"></i>No adjudicada — ganó '+win.n+' con '+money(win.p)+' ('+money(o.total)+')');
   document.getElementById('postDetail').innerHTML='<div class="card">'
-   +'<div style="display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:12px"><div><div style="font-size:15px;font-weight:500">'+o.nom+'</div><div style="font-size:12px;color:var(--text-secondary)">'+o.cod+' · '+o.prod+' · '+num(o.qty)+' unidades · cierre '+o.cierre+'</div></div><span class="mchip">'+o.bids.length+' oferente'+(o.bids.length>1?'s':'')+'</span></div>'
+   +'<div style="display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:12px"><div><div style="font-size:15px;font-weight:500">'+o.nom+'</div><div style="font-size:12px;color:var(--text-secondary)">'+o.cod+' · '+o.prod+' · '+num(o.qty)+' unidad'+(o.qty===1?'':'es')+' · cierre '+o.cierre+'</div></div><span class="mchip">'+o.bids.length+' oferente'+(o.bids.length>1?'s':'')+'</span></div>'
    +'<div style="background:var(--bg-'+c+');color:var(--text-'+c+');border-radius:var(--radius);padding:10px 13px;font-size:13px;font-weight:500;margin-bottom:16px">'+head+'</div>'
    +'<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:16px"><div class="metric"><div class="l">Tu oferta</div><div class="v">'+money(mine.p)+'</div></div><div class="metric"><div class="l">Oferta ganadora</div><div class="v">'+money(win.p)+'</div></div><div class="metric"><div class="l">Tu posición</div><div class="v">'+rank+'º de '+o.bids.length+'</div></div></div>'
    +'<div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px"><i class="ti ti-list-numbers" style="font-size:15px;vertical-align:-2px;margin-right:4px"></i>Todas las ofertas reales, de menor a mayor precio</div>'+ladder(o)
@@ -475,7 +548,7 @@ function showPost(cod){
 }
 
 /* ---- COMPETENCIA REAL (mismos productos que AP SPA) ---- */
-var SUP=[
+var AP_SUP=[
  {s:'León Borzut',name:'Productos Quirúrgicos y Farmacológicos León Borzut',rut:'93.366.000-1',lineas:4643,monto:13299455991},
  {s:'Reutter',name:'Reutter S.A.',rut:'81.210.400-4',lineas:4714,monto:8226205365},
  {s:'Madegom',name:'Madegom SpA',rut:'84.609.600-0',lineas:4113,monto:7860708364},
@@ -486,19 +559,32 @@ var SUP=[
  {s:'Global Healthcare',name:'Global Healthcare Chile',rut:'59.106.780-K',lineas:1157,monto:3029829714},
  {s:'Tú (AP SpA)',name:'Comercializadora y Distribuidora AP SpA',rut:'77.646.274-8',lineas:64,monto:89977580,me:1}
 ];
-var SMAX=13299455991, curSup=0;
+var SUP=AP_SUP, SMAX=13299455991, curSup=0;
 var supList=document.getElementById('supList');
-supList.innerHTML=SUP.map(function(x,i){return '<button data-i="'+i+'" style="text-align:left;border:.5px solid '+(i===0?'var(--border-accent)':'var(--border)')+';background:'+(i===0?'var(--bg-accent)':'var(--surface-2)')+';color:'+(x.me?'var(--text-accent)':(i===0?'var(--text-accent)':'var(--text-primary)'))+';border-radius:var(--radius);padding:9px 11px;cursor:pointer;font-family:inherit;font-size:12.5px;line-height:1.3'+(x.me?';font-weight:500':'')+'">'+x.s+'<div style="font-size:11px;color:var(--text-secondary)">'+big(x.monto)+'</div></button>'}).join('');
+function renderSupList(){
+  supList.innerHTML=SUP.map(function(x,i){var sub=CUR.thin?moneyC(x.oferta):big(x.monto);
+    return '<button data-i="'+i+'" style="text-align:left;border:.5px solid '+(i===curSup?'var(--border-accent)':'var(--border)')+';background:'+(i===curSup?'var(--bg-accent)':'var(--surface-2)')+';color:'+(x.me?'var(--text-accent)':(i===curSup?'var(--text-accent)':'var(--text-primary)'))+';border-radius:var(--radius);padding:9px 11px;cursor:pointer;font-family:inherit;font-size:12.5px;line-height:1.3'+(x.me?';font-weight:500':'')+'">'+x.s+'<div style="font-size:11px;color:var(--text-secondary)">'+sub+'</div></button>'}).join('');
+  supList.querySelectorAll('button').forEach(function(b){b.onclick=function(){curSup=+b.dataset.i;renderSupList();renderSup();}});
+}
 function renderSup(){
-  var x=SUP[curSup], ticket=x.monto/x.lineas;
+  var x=SUP[curSup];
+  if(CUR.thin){
+    var win=SUP.filter(function(s){return s.res})[0], me=SUP.filter(function(s){return s.me})[0];
+    var rc=x.res?'success':'danger';
+    document.getElementById('supCard').innerHTML='<div class="card"><div style="display:flex;align-items:center;gap:12px;margin-bottom:16px"><div style="width:46px;height:46px;flex:0 0 46px;border-radius:50%;background:var(--bg-accent);color:var(--text-accent);display:flex;align-items:center;justify-content:center;font-weight:500">'+(x.me?'NK':x.s.slice(0,2).toUpperCase())+'</div><div style="min-width:0"><div style="font-weight:500;font-size:15px">'+x.name+'</div><div style="font-size:12px;color:var(--text-secondary)">'+(x.me?'tu empresa':'competidor real')+'</div></div></div>'
+     +'<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:16px"><div class="metric"><div class="l">Ofertó</div><div class="v">'+money(x.oferta)+'</div></div><div class="metric"><div class="l">Resultado</div><div class="v" style="color:var(--text-'+rc+')">'+(x.res?'ganó':'perdió')+'</div></div></div>'
+     +'<div style="border-top:.5px solid var(--border);padding-top:14px;font-size:13px;line-height:1.55"><i class="ti ti-info-circle" style="font-size:16px;vertical-align:-2px;margin-right:5px;color:var(--text-accent)"></i>'+(x.me?'Ganaste con '+money(me.oferta)+' pese a que International Clinics ofertó '+money(1450000)+' — <b>4× menos</b>.':(x.oferta<me.oferta?'Ofertó '+money(x.oferta)+', <b>'+Math.round((me.oferta-x.oferta)/x.oferta*10)/10+'× más barato</b> que tú, y aun así perdió.':'Ofertó '+money(x.oferta)+' y perdió.'))+'</div>'
+     +'<div style="background:var(--surface-1);border-radius:var(--radius);padding:10px 13px;font-size:12px;color:var(--text-secondary);line-height:1.5;margin-top:12px">Solo has competido en <b>1 línea</b> con rivales: tu historial no da para un análisis de competencia más amplio.</div></div>';
+    return;
+  }
+  var ticket=x.monto/x.lineas;
   var ini=x.me?'AP':x.s.replace(/[^A-Za-z ]/g,'').split(' ')[0].slice(0,2).toUpperCase();
   var note=x.me?('Vendes <b>'+big(x.monto)+'</b> en estos productos — el líder del rubro vende <b>'+big(SMAX)+'</b>, unas <b>'+Math.round(SMAX/x.monto)+'×</b> más. Ahí está tu espacio de crecimiento.'):('Vende <b>'+big(x.monto)+'</b> en los mismos productos que tú, en '+num(x.lineas)+' líneas de compra. Ticket medio de '+money(ticket)+' por línea.');
   document.getElementById('supCard').innerHTML='<div class="card"><div style="display:flex;align-items:center;gap:12px;margin-bottom:16px"><div style="width:46px;height:46px;flex:0 0 46px;border-radius:50%;background:var(--bg-accent);color:var(--text-accent);display:flex;align-items:center;justify-content:center;font-weight:500">'+ini+'</div><div style="min-width:0"><div style="font-weight:500;font-size:15px">'+x.name+'</div><div style="font-size:12px;color:var(--text-secondary)">RUT '+x.rut+(x.me?' · tu empresa':'')+'</div></div></div><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px"><div class="metric"><div class="l">Vendido (tus productos)</div><div class="v">'+big(x.monto)+'</div></div><div class="metric"><div class="l">Líneas de compra</div><div class="v">'+num(x.lineas)+'</div></div><div class="metric"><div class="l">Ticket medio</div><div class="v">'+money(ticket)+'</div></div></div><div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">Tamaño vs. el líder del rubro</div><div class="bar" style="height:11px;margin-bottom:16px"><div style="left:0;width:'+Math.max(0.6,x.monto/SMAX*100)+'%"></div></div><div style="border-top:.5px solid var(--border);padding-top:14px;font-size:13px;line-height:1.55"><i class="ti ti-chart-arrows-vertical" style="font-size:16px;vertical-align:-2px;margin-right:5px;color:var(--text-accent)"></i>'+note+'</div></div>';
 }
-supList.querySelectorAll('button').forEach(function(b){b.onclick=function(){curSup=+b.dataset.i;supList.querySelectorAll('button').forEach(function(el,i){var on=i===curSup;el.style.borderColor=on?'var(--border-accent)':'var(--border)';el.style.background=on?'var(--bg-accent)':'var(--surface-2)';});renderSup();}});
 
 /* ---- ORGANISMOS REALES que le compran a AP SPA ---- */
-var ORG=[
+var AP_ORG=[
  {name:'Servicio de Salud Valparaíso San Antonio',short:'S.S. Valparaíso San Antonio',rut:'61.602.126-5',n:52598,anul:'0,98%',lvl:'Bajo',miCompra:78039938,misOC:16,hosp:'Hospital Claudio Vicuña'},
  {name:'Servicio de Salud Occidente — Hospital San Juan de Dios',short:'S.S. Occidente — San Juan de Dios',rut:'61.608.204-3',n:152870,anul:'2,29%',lvl:'Medio',miCompra:26268953,misOC:11,hosp:'Hospital San Juan de Dios'},
  {name:'Servicio Nacional de Salud — Hospital de Melipilla',short:'S.N.S. Hospital de Melipilla',rut:'61.602.123-0',n:64575,anul:'2,57%',lvl:'Medio',miCompra:16190950,misOC:19,hosp:'Hospital de Melipilla'},
@@ -506,9 +592,12 @@ var ORG=[
  {name:'Servicio de Salud Norte — Hospital Roberto del Río',short:'S.S. Norte — Roberto del Río',rut:'61.608.004-0',n:59911,anul:'1,35%',lvl:'Bajo',miCompra:14626766,misOC:7,hosp:'Hospital Roberto del Río'},
  {name:'Servicio de Salud Viña del Mar Quillota',short:'S.S. Viña del Mar Quillota',rut:'61.606.608-0',n:77685,anul:'2,35%',lvl:'Medio',miCompra:8378195,misOC:6,hosp:'Red Viña del Mar Quillota'}
 ];
-var OMAX=152870, curOrg=0;
+var ORG=AP_ORG, OMAX=152870, curOrg=0;
 var orgList=document.getElementById('orgList');
-orgList.innerHTML=ORG.map(function(x,i){return '<button data-i="'+i+'" style="text-align:left;border:.5px solid '+(i===0?'var(--border-accent)':'var(--border)')+';background:'+(i===0?'var(--bg-accent)':'var(--surface-2)')+';color:'+(i===0?'var(--text-accent)':'var(--text-primary)')+';border-radius:var(--radius);padding:9px 11px;cursor:pointer;font-family:inherit;font-size:12.5px;line-height:1.3">'+x.short+'<div style="font-size:11px;color:var(--text-secondary)">te compró '+big(x.miCompra)+'</div></button>'}).join('');
+function renderOrgList(){
+  orgList.innerHTML=ORG.map(function(x,i){return '<button data-i="'+i+'" style="text-align:left;border:.5px solid '+(i===curOrg?'var(--border-accent)':'var(--border)')+';background:'+(i===curOrg?'var(--bg-accent)':'var(--surface-2)')+';color:'+(i===curOrg?'var(--text-accent)':'var(--text-primary)')+';border-radius:var(--radius);padding:9px 11px;cursor:pointer;font-family:inherit;font-size:12.5px;line-height:1.3">'+x.short+'<div style="font-size:11px;color:var(--text-secondary)">te compró '+big(x.miCompra)+'</div></button>'}).join('');
+  orgList.querySelectorAll('button').forEach(function(b){b.onclick=function(){curOrg=+b.dataset.i;renderOrgList();renderOrg();}});
+}
 function renderOrg(){
   var x=ORG[curOrg], rc=x.lvl==='Bajo'?'success':'warning';
   var season=[42,46,50,48,53,56,55,52,64,82,96,86],mn=['E','F','M','A','M','J','J','A','S','O','N','D'],smax=96;
@@ -525,7 +614,6 @@ function renderOrg(){
    +'<div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">Volumen de compra vs. el mayor de tus clientes</div><div class="bar" style="height:11px;margin-bottom:16px"><div style="left:0;width:'+(x.n/OMAX*100)+'%"></div></div>'
    +'<div style="border-top:.5px solid var(--border);padding-top:14px;font-size:13px;line-height:1.55"><i class="ti ti-bulb" style="font-size:16px;vertical-align:-2px;margin-right:5px;color:var(--text-accent)"></i>'+(x.lvl==='Bajo'?'Comprador confiable — solo '+x.anul+' de sus órdenes se anulan. Postula con tranquilidad.':'Riesgo medio — '+x.anul+' de sus órdenes se anulan. Revisa condiciones antes de comprometer stock.')+'</div></div>';
 }
-orgList.querySelectorAll('button').forEach(function(b){b.onclick=function(){curOrg=+b.dataset.i;orgList.querySelectorAll('button').forEach(function(el,i){var on=i===curOrg;el.style.borderColor=on?'var(--border-accent)':'var(--border)';el.style.background=on?'var(--bg-accent)':'var(--surface-2)';el.style.color=on?'var(--text-accent)':'var(--text-primary)'});renderOrg();}});
 
 /* ---- ALERTAS ---- */
 var CH=[['ti-brand-whatsapp','WhatsApp',1],['ti-brand-telegram','Telegram',0],['ti-mail','Email',1],['ti-puzzle','Extensión Chrome',1]];
@@ -533,7 +621,7 @@ function renderCanales(){
   document.getElementById('canales').innerHTML=CH.map(function(c,i){var on=c[2]===1;return '<button data-i="'+i+'" style="display:flex;align-items:center;gap:8px;border:.5px solid '+(on?'var(--border-accent)':'var(--border)')+';background:'+(on?'var(--bg-accent)':'transparent')+';color:'+(on?'var(--text-accent)':'var(--text-muted)')+';border-radius:99px;padding:8px 14px;font-size:13px;cursor:pointer;font-family:inherit"><i class="ti '+c[0]+'" style="font-size:16px"></i>'+c[1]+' <i class="ti '+(on?'ti-check':'ti-x')+'" style="font-size:14px"></i></button>'}).join('');
   document.querySelectorAll('#canales button').forEach(function(b){b.onclick=function(){var i=+b.dataset.i;CH[i][2]=CH[i][2]?0:1;renderCanales();}});
 }
-var RULES=[{kw:'sábana, cubre camilla',tipo:'Licitación',score:85,canal:'WhatsApp'},{kw:'gasas, vendas',tipo:'Compra ágil',score:80,canal:'Email'}];
+var RULES=[];
 function renderRules(){
   document.getElementById('rulesList').innerHTML=RULES.length?RULES.map(function(r,i){return '<div style="border:.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--surface-2)"><div style="font-size:13px;line-height:1.5">Avísame de <b>'+r.tipo.toLowerCase()+'</b> de <span class="mchip">'+r.kw+'</span> con score <b>&ge; '+r.score+'</b> &rarr; <span style="color:var(--text-accent)">'+r.canal+'</span></div><button class="iconbtn" data-i="'+i+'" style="width:30px;height:30px;font-size:15px"><i class="ti ti-trash"></i></button></div>'}).join(''):'<div style="font-size:13px;color:var(--text-muted);padding:8px 0">Sin reglas.</div>';
   document.querySelectorAll('#rulesList button').forEach(function(b){b.onclick=function(){RULES.splice(+b.dataset.i,1);renderRules();}});
@@ -546,7 +634,7 @@ document.getElementById('rfSave').onclick=function(){RULES.push({kw:document.get
 /* ---- COPILOTO ---- */
 var CHATBOX=document.getElementById('chatMsgs');
 function addMsg(who,html){var d=document.createElement('div');if(who==='a'){d.style.display='flex';d.style.gap='9px';d.style.alignSelf='flex-start';d.innerHTML='<div style="width:28px;height:28px;flex:0 0 28px;border-radius:50%;background:var(--bg-accent);display:flex;align-items:center;justify-content:center"><i class="ti ti-sparkles" style="font-size:15px;color:var(--text-accent)"></i></div><div class="chatbubble-a">'+html+'</div>';}else{d.style.alignSelf='flex-end';d.innerHTML='<div class="chatbubble-u">'+html+'</div>';}CHATBOX.appendChild(d);CHATBOX.scrollTop=CHATBOX.scrollHeight;}
-function answer(q){var t=q.toLowerCase();
+function answer(q){if(CUR.key==='nk')return nkAnswer(q);var t=q.toLowerCase();
  function pr(k){var p=DATA[k];return 'El precio de referencia de <b>'+p.name.toLowerCase()+'</b> es <b>'+money(p.med)+'</b> por '+p.unit+' — rango '+money(p.p25)+' a '+money(p.p75)+' sobre '+num(p.n)+' compras del Estado.'+(p.mio?' Tu empresa ya vendió '+money(p.mio)+' de este producto.':'');}
  if(t.indexOf('sábana')>=0||t.indexOf('sabana')>=0)return pr('sabanas')+' Ahora mismo no hay licitaciones abiertas de sábanas: la última (convenio de sábana desechable, $53M) cerró el 4 de junio. Te aviso en cuanto salga la próxima.';
  if(t.indexOf('gasa')>=0)return pr('gasas');
@@ -560,19 +648,27 @@ function answer(q){var t=q.toLowerCase();
  if(t.indexOf('perd')>=0)return 'Perdiste 25 de 41 líneas. Las más dolorosas: <b>gasa estéril</b> ($50,4M — Reutter ganó con $34 vs tus $47) y <b>gasas de droguería</b>, donde <b>perdiste por $1</b> (Nemo $43, tú $44). Y en <b>unidades médicas</b> fuiste el más barato ($895) y perdiste igual contra Qualymed ($1.330).';
  if(t.indexOf('mesa')>=0||t.indexOf('margen')>=0||t.indexOf('caro')>=0||t.indexOf('barato')>=0)return 'En <b>cubre camillas</b> ganaste con $1.935 y el segundo ofertó $2.254: podías haber cobrado ~$2.250 y ganar igual — <b>dejaste unos $17,2 M sobre la mesa</b>. Ojo también: dos veces fuiste el más barato y perdiste, así que bajar el precio no siempre paga.';
  return 'Puedo responder sobre tus precios de referencia (sábanas, gasas, vendas, planas quirúrgicas…), tu competencia, tus oportunidades abiertas y tu historial real de postulaciones. Prueba una sugerencia.';}
+function nkAnswer(q){var t=q.toLowerCase();
+ if(t.indexOf('familia')>=0||t.indexOf('obsolet')>=0)return 'Tienes <b>8 familias</b> escritas a mano (3M, BSN Cuidado de Heridas, BSN Ortopedia, BSN Terapia Compresiva, Esterilización, Detergentes, bota descarga, Otros Kiruka). El problema: <b>ya no reflejan lo que vendes</b>. Son de curación de heridas y ortopedia, pero tus ventas reales son <b>equipos médicos y repuestos</b>. Por eso te traen autoclaves y no oxímetros. Te propongo regenerarlas desde tu historial.';
+ if(t.indexOf('decibel')>=0||t.indexOf('sonido')>=0||t.indexOf('caro')>=0)return 'Vendiste el <b>medidor de decibelios a $5.928.000</b> cuando la referencia del mercado es <b>$150.000</b>. Ganaste siendo el <b>tercero más caro de cuatro</b>: International Clinics ofertó $1.450.000 — 4× menos — y perdió. El precio no decidió.';
+ if(t.indexOf('oxímetro')>=0||t.indexOf('oximetro')>=0||t.indexOf('referencia')>=0||t.indexOf('precio')>=0)return 'Vendiste <b>accesorios de oxímetros a $610.000</b> por unidad, y la referencia del mercado es <b>$30.000</b> — <b>20× por encima</b>. Ganaste porque fuiste el <b>único oferente</b>. Ahí está tu nicho: donde no hay competencia, no hay presión de precio.';
+ if(t.indexOf('tasa')>=0||t.indexOf('éxito')>=0||t.indexOf('exito')>=0)return 'Tu tasa de éxito es <b>100%</b>… pero sobre <b>solo 2 postulaciones</b> ($7,76M adjudicados). No es una tasa fiable: es un historial demasiado corto para sacar conclusiones.';
+ if(t.indexOf('oportunidad')>=0||t.indexOf('licitac')>=0)return 'Hay <b>2 oportunidades abiertas que calzan de verdad</b> contigo: <b>convenio de suministro y repuestos para equipos médicos</b> ($175 M) y <b>oxímetros de pulso portátil</b> ($7,5 M), ambas cierran en 2 días. Las otras 7 te las traen tus familias obsoletas o son falsos positivos del patrón <code>repuesto</code> (camionetas, aeronaves).';
+ if(t.indexOf('cliente')>=0||t.indexOf('organismo')>=0||t.indexOf('hospital')>=0)return 'Tu único cliente es el <b>Servicio de Salud de Concepción</b> (Hospital Guillermo Grant Benavente): te compró <b>$7.054.320</b> en 1 orden. Es un comprador confiable: solo <b>1,78%</b> de anulación sobre 17.003 órdenes.';
+ return 'Puedo responder sobre tus 2 productos (oxímetros, medidor de decibelios), tus familias de patrones, tu único cliente y tus oportunidades abiertas. Prueba una sugerencia.';}
 function chatSend(q){if(!q)return;addMsg('u',q);window.setTimeout(function(){addMsg('a',answer(q))},220);}
-var SUG=['¿Cuál es mi tasa de éxito?','¿Qué licitaciones perdí y por qué?','¿Dejé dinero sobre la mesa?','¿Cuál es mi mejor cliente?'];
-document.getElementById('chatSug').innerHTML=SUG.map(function(s){return '<button class="chip" data-q="'+s+'">'+s+'</button>'}).join('');
-document.querySelectorAll('#chatSug button').forEach(function(b){b.onclick=function(){chatSend(b.dataset.q)}});
+var AP_SUG=['¿Cuál es mi tasa de éxito?','¿Qué licitaciones perdí y por qué?','¿Dejé dinero sobre la mesa?','¿Cuál es mi mejor cliente?'];
+var NK_SUG=['¿Mis familias están al día?','¿Por qué gané el decibelímetro?','¿Cobré por encima de la referencia?','¿Qué oportunidades me sirven?'];
+function renderSug(){document.getElementById('chatSug').innerHTML=CUR.SUG.map(function(s){return '<button class="chip" data-q="'+s+'">'+s+'</button>'}).join('');
+ document.querySelectorAll('#chatSug button').forEach(function(b){b.onclick=function(){chatSend(b.dataset.q)}});}
 var ci=document.getElementById('chatInput');
 document.getElementById('chatSend').onclick=function(){chatSend(ci.value.trim());ci.value='';};
 ci.addEventListener('keydown',function(e){if(e.key==='Enter'){chatSend(ci.value.trim());ci.value='';}});
-addMsg('a','Hola AP SpA. Detecté tu perfil: <b>insumos clínicos y quirúrgicos</b>, 196 órdenes y $241 M vendidos al Estado. Pregúntame por el precio de cualquiera de tus productos, por tu competencia o por las oportunidades abiertas.');
 
 document.querySelectorAll('#copMode button').forEach(function(b){b.onclick=function(){var m=b.dataset.m;document.querySelectorAll('#copMode button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');document.getElementById('chatView').style.display=m==='chat'?'block':'none';document.getElementById('basesView').style.display=m==='bases'?'block':'none';}});
-var LICS=OPP.filter(function(o){return o.t==='Licitación'});
+var LICS=[];
 var baseSel=document.getElementById('baseSel');
-baseSel.innerHTML=LICS.map(function(o,i){return '<option value="'+i+'">'+o.nom+' · '+o.cod+'</option>'}).join('');
+function rebuildBases(){LICS=OPP.filter(function(o){return o.t==='Licitación'});baseSel.innerHTML=LICS.map(function(o,i){return '<option value="'+i+'">'+o.nom+' · '+o.cod+'</option>'}).join('');}
 function renderBase(){
   var o=LICS[+baseSel.value||0],gar=Math.round(o.monto*0.03),alto=o.monto>50000000;
   function sec(icon,title,body){return '<div style="margin-bottom:15px"><div style="font-size:13px;font-weight:500;margin-bottom:6px"><i class="ti '+icon+'" style="font-size:15px;vertical-align:-2px;margin-right:5px;color:var(--text-accent)"></i>'+title+'</div>'+body+'</div>';}
@@ -596,7 +692,41 @@ document.querySelectorAll('#nav button').forEach(function(b){b.onclick=function(
 var themeBtn=document.getElementById('themeBtn');
 themeBtn.onclick=function(){var h=document.documentElement;var d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');themeBtn.innerHTML='<i class="ti '+(d?'ti-moon':'ti-sun')+'"></i>';};
 
-renderCard();renderOpp();renderSup();renderOrg();renderCanales();renderRules();renderPost();renderBase();
+/* ---- LAS DOS EMPRESAS ---- */
+var TEN={
+ ap:{key:'ap',ini:'AP',rut:'77.646.274-8',nom:'Comercializadora y Distribuidora AP SpA',giro:'Insumos clínicos',
+     nOC:'196',monto:'$241 M',desde:'2023',perfil:'insumos clínicos y quirúrgicos',firstProd:'planas',famManual:0,thin:0,
+     DATA:AP_DATA,FAM:AP_FAM,OPP:AP_OPP,SUP:AP_SUP,ORG:AP_ORG,POST:AP_POST,PSTATS:AP_PSTATS,SUG:AP_SUG,RULES:[{kw:'sábana, cubre camilla',tipo:'Licitación',score:85,canal:'WhatsApp'},{kw:'gasas, vendas',tipo:'Compra ágil',score:80,canal:'Email'}],
+     hola:'Hola AP SpA. Detecté tu perfil: <b>insumos clínicos y quirúrgicos</b>, 196 órdenes y $241 M vendidos al Estado. Pregúntame por el precio de cualquiera de tus productos, por tu competencia o por tu historial de postulaciones.'},
+ nk:{key:'nk',ini:'NK',rut:'76.739.855-7',nom:'Distribuidora NKIRUKA SpA',giro:'Equipos médicos',
+     nOC:'1',monto:'$7,1 M',desde:'2023',perfil:'equipamiento y repuestos médicos',firstProd:'deci',famManual:1,thin:1,
+     DATA:NK_DATA,FAM:NK_FAM,OPP:NK_OPP,SUP:NK_SUP,ORG:NK_ORG,POST:NK_POST,PSTATS:NK_PSTATS,SUG:NK_SUG,RULES:[{kw:'autoclave, esterilización',tipo:'Licitación',score:70,canal:'Email'}],
+     hola:'Hola NKIRUKA. Tu historial en Mercado Público es corto: <b>1 orden</b> y <b>2 licitaciones ganadas</b> ($7,76 M). Pero tienes <b>8 familias de patrones</b> escritas a mano… y ya no coinciden con lo que vendes. Pregúntame por ellas.'}
+};
+var CUR=TEN.ap;
+function loadTenant(k){
+  CUR=TEN[k];
+  DATA=CUR.DATA; FAM=CUR.FAM; OPP=CUR.OPP; SUP=CUR.SUP; ORG=CUR.ORG; POST=CUR.POST; PSTATS=CUR.PSTATS; RULES=CUR.RULES;
+  cur=CUR.firstProd; curProduct=null; curSup=0; curOrg=0; opf='todas'; pf='todas';
+  SMAX=CUR.thin?0:13299455991; OMAX=CUR.thin?17003:152870;
+  document.querySelector('.avatar').textContent=CUR.ini;
+  document.getElementById('sideMine').innerHTML='<div style="color:var(--text-muted);margin-bottom:4px">Tu empresa</div><div style="color:var(--text-primary);font-weight:500;line-height:1.35;margin-bottom:6px">'+CUR.nom+'</div><div>RUT <b>'+CUR.rut+'</b></div><div><b>'+CUR.nOC+'</b> '+(CUR.nOC==='1'?'orden ganada':'órdenes ganadas')+'</div><div><b>'+CUR.monto+'</b> vendidos al Estado</div><div>activa desde <b>'+CUR.desde+'</b></div><div style="margin-top:8px"><button class="chip" id="outBtn" style="font-size:11.5px;padding:4px 10px">Cambiar empresa</button></div>';
+  document.getElementById('outBtn').onclick=function(){document.getElementById('app').classList.remove('on');document.getElementById('login').style.display='flex';};
+  document.getElementById('opPerfil').innerHTML='<i class="ti ti-user-check" style="font-size:14px;vertical-align:-2px;margin-right:3px"></i>Perfil detectado: <b>'+CUR.perfil+'</b>';
+  document.querySelectorAll('#opfilter button').forEach(function(x){x.classList.toggle('on',x.dataset.f==='todas')});
+  document.querySelectorAll('#postfilter button').forEach(function(x){x.classList.toggle('on',x.dataset.f==='todas')});
+  famPanel.style.display='none';
+  CHATBOX.innerHTML=''; addMsg('a',CUR.hola);
+  renderProds(); renderCard(); renderFamPanel(); renderOpp(); document.getElementById('oportDetail').innerHTML='';
+  renderSupList(); renderSup(); renderOrgList(); renderOrg(); renderCanales(); renderRules();
+  renderPStats(); renderPost(); document.getElementById('postDetail').innerHTML='';
+  renderSug(); rebuildBases(); renderBase();
+}
+/* ---- LOGIN ---- */
+var pick='ap';
+document.querySelectorAll('.acct').forEach(function(b){b.onclick=function(){pick=b.dataset.t;document.querySelectorAll('.acct').forEach(function(x){x.style.borderColor='var(--border-strong)';x.style.background='var(--surface-1)'});b.style.borderColor='var(--border-accent)';b.style.background='var(--bg-accent)';};});
+document.getElementById('enterBtn').onclick=function(){loadTenant(pick);document.getElementById('login').style.display='none';document.getElementById('app').classList.add('on');document.querySelector('#nav button[data-s="precio"]').click();};
+loadTenant('ap');
 </script>
 </body>
 </html>
