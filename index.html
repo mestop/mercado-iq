@@ -152,12 +152,14 @@ body{margin:0;font-family:var(--font-sans);background:var(--surface-0);color:var
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
           <div class="mchip"><i class="ti ti-user-check" style="font-size:14px;vertical-align:-2px;margin-right:3px"></i>Perfil detectado: <b>insumos clínicos y quirúrgicos</b></div>
           <div class="mchip"><i class="ti ti-clock" style="font-size:14px;vertical-align:-2px;margin-right:3px"></i>Solo procesos <b>abiertos</b> · al 15 jul 2026</div>
+          <button class="chip" id="famBtn"><i class="ti ti-category-2" style="font-size:14px;vertical-align:-2px"></i> Tus familias</button>
           <div class="seg" id="opfilter" style="margin-left:auto;display:inline-flex;border:.5px solid var(--border-strong);border-radius:var(--radius);overflow:hidden">
             <button data-f="todas" class="chip on" style="border:none;border-radius:0">Todas</button>
             <button data-f="Licitación" class="chip" style="border:none;border-radius:0">Licitaciones</button>
             <button data-f="Compra ágil" class="chip" style="border:none;border-radius:0">Compra ágil</button>
           </div>
         </div>
+        <div id="famPanel" class="card" style="display:none;margin-bottom:14px"></div>
         <div id="oportList"></div>
         <div id="oportDetail" style="margin-top:14px"></div>
       </section>
@@ -169,7 +171,8 @@ body{margin:0;font-family:var(--font-sans);background:var(--surface-0);color:var
         <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px">
           <div class="mchip"><i class="ti ti-database" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Ofertas y adjudicaciones <b>reales</b> de Mercado Público</div>
           <div class="seg" id="postfilter" style="margin-left:auto;display:inline-flex;border:.5px solid var(--border-strong);border-radius:var(--radius);overflow:hidden">
-            <button data-f="todas" class="chip on" style="border:none;border-radius:0">Todas</button>
+            <button data-f="abiertas" class="chip" style="border:none;border-radius:0">En evaluación</button>
+            <button data-f="todas" class="chip on" style="border:none;border-radius:0">Cerradas</button>
             <button data-f="win" class="chip" style="border:none;border-radius:0">Ganadas</button>
             <button data-f="loss" class="chip" style="border:none;border-radius:0">Perdidas</button>
           </div>
@@ -310,21 +313,31 @@ function renderSim(p){
 }
 prods.querySelectorAll('button').forEach(function(b){b.onclick=function(){cur=b.dataset.p;curProduct=null;prods.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');renderCard();}});
 
+/* ---- FAMILIAS DE PATRONES ---- */
+/* El motor de familias (EMP_FAMILIA / EMP_FAMILIA_PATRON / EMP_FAMILIA_LIC) ya existe en la plataforma.
+   Hoy las familias se definen A MANO. Aqui se PROPONEN automaticamente desde el historial real de ventas
+   del RUT: cada familia agrupa productos que la empresa ya vendio al Estado. El usuario puede editarlas. */
+var FAM={
+ ropa:{n:'Ropa quirúrgica desechable',pat:'plana quirurgic*|sabana*|cubre camilla*|protege sabana*|manta quirurgic*',prods:'Planas quirúrgicas · Sábanas de hospital · Cubre camillas · Protege sábanas · Manta quirúrgica',venta:121358480},
+ gasas:{n:'Gasas y apósitos',pat:'gasa*|venda*|aposito*|curacion|esponja gelatina',prods:'Gasas quirúrgicas · Vendas de gasa · Esponjas de gelatina absorbible',venta:18453300},
+ pabellon:{n:'Insumos de pabellón',pat:'insumo* clinic*|insumo* medic*|pabellon|set* quirurgic*|kit* preparacion|desbridamiento|lapiz*',prods:'Sets quirúrgicos · Kits de preparación · Desbridamiento · Lápices de cauterio · Esterilización',venta:17838400},
+ aseo:{n:'Aseo e higiene',pat:'toalla* papel|cepillo* limpieza|esponja*|aseo|detergente',prods:'Toallas de papel · Cepillos de limpieza · Esponjas',venta:8218800}
+};
 /* ---- OPORTUNIDADES REALES ABIERTAS (FH_CIERRE > hoy, 15 jul 2026) ---- */
 /* Filtradas por fecha de cierre real y estado, no por fecha de deteccion. */
 var OPP=[
- {t:'Licitación',cod:'3191-66-LE26',nom:'LE INS3 · Adquisición de insumos clínicos',monto:70000000,cat:'Salud',score:96,dias:5,cierre:'20 jul 2026',ref:DATA.gasas,
+ {t:'Licitación',cod:'3191-66-LE26',nom:'LE INS3 · Adquisición de insumos clínicos',monto:70000000,cat:'Salud',score:96,dias:5,cierre:'20 jul 2026',ref:DATA.gasas,fam:FAM.pabellon,hit:'insumo* clinic*',
   hist:'Ya ganaste el <b>LE INS2</b> (3191-3-LE26) de este mismo comprador, con sets de suministros quirúrgicos a $450. Este es el siguiente de la serie.'},
- {t:'Licitación',cod:'1057544-217-LP26',nom:'Compra por suministro de insumos clínicos para pabellones',monto:270000000,cat:'Salud',score:93,dias:5,cierre:'20 jul 2026',ref:DATA.planas,
+ {t:'Licitación',cod:'1057544-217-LP26',nom:'Compra por suministro de insumos clínicos para pabellones',monto:270000000,cat:'Salud',score:93,dias:5,cierre:'20 jul 2026',ref:DATA.planas,fam:FAM.pabellon,hit:'pabellon',
   hist:'Tu mayor adjudicación histórica fue <b>Insumos para pabellón</b> (898-70-LQ24): planas quirúrgicas a $4.480, $48,4M. Mismo terreno.'},
- {t:'Licitación',cod:'1113159-11-L126',nom:'Insumos médicos',monto:6000000,cat:'Salud',score:78,dias:5,cierre:'20 jul 2026',ref:DATA.vendas},
- {t:'Licitación',cod:'1499-129-LP26',nom:'RBV · Insumos clínicos para el cuidado de la piel',monto:348755000,cat:'Salud',score:71,dias:5,cierre:'20 jul 2026',ref:DATA.gelatina},
- {t:'Compra ágil',cod:'1641-4071-COT26',nom:'Lápiz marcador quirúrgico estéril con regla',monto:100000,cat:'Salud',score:68,dias:1,cierre:'16 jul 2026',ref:DATA.gasas,
+ {t:'Licitación',cod:'1113159-11-L126',nom:'Insumos médicos',monto:6000000,cat:'Salud',score:78,dias:5,cierre:'20 jul 2026',ref:DATA.vendas,fam:FAM.pabellon,hit:'insumo* medic*'},
+ {t:'Licitación',cod:'1499-129-LP26',nom:'RBV · Insumos clínicos para el cuidado de la piel',monto:348755000,cat:'Salud',score:71,dias:5,cierre:'20 jul 2026',ref:DATA.gelatina,fam:FAM.gasas,hit:'curacion'},
+ {t:'Compra ágil',cod:'1641-4071-COT26',nom:'Lápiz marcador quirúrgico estéril con regla',monto:100000,cat:'Salud',score:68,dias:1,cierre:'16 jul 2026',ref:DATA.gasas,fam:FAM.pabellon,hit:'lapiz*',
   hist:'Ya adjudicaste <b>lápices quirúrgicos de cauterio</b> (1057472-122-LP25).'},
- {t:'Licitación',cod:'4407-21-L126',nom:'Insumos médicos para abastecer farmacia del CESFAM',monto:1500000,cat:'Salud',score:64,dias:5,cierre:'20 jul 2026',ref:DATA.vendas},
- {t:'Licitación',cod:'1180747-10-LE26',nom:'Adquisición instrumental quirúrgico CECOSF · nuevo llamado',monto:22617000,cat:'Equipamiento',score:52,dias:2,cierre:'17 jul 2026',ref:DATA.planas,dir:1},
- {t:'Licitación',cod:'1070620-68-LE26',nom:'VRC · Suministro de instrumental microquirúrgico',monto:69751000,cat:'Equipamiento',score:34,dias:2,cierre:'17 jul 2026',ref:DATA.planas},
- {t:'Licitación',cod:'3391-13-LR26',nom:'Suministro de reactivos e insumos para laboratorio clínico',monto:692657533,cat:'Laboratorio',score:16,dias:2,cierre:'17 jul 2026',ref:DATA.gasas}
+ {t:'Licitación',cod:'4407-21-L126',nom:'Insumos médicos para abastecer farmacia del CESFAM',monto:1500000,cat:'Salud',score:64,dias:5,cierre:'20 jul 2026',ref:DATA.vendas,fam:FAM.pabellon,hit:'insumo* medic*'},
+ {t:'Licitación',cod:'1180747-10-LE26',nom:'Adquisición instrumental quirúrgico CECOSF · nuevo llamado',monto:22617000,cat:'Equipamiento',score:52,dias:2,cierre:'17 jul 2026',ref:DATA.planas,fam:FAM.pabellon,hit:'set* quirurgic*',debil:1,dir:1},
+ {t:'Licitación',cod:'1070620-68-LE26',nom:'VRC · Suministro de instrumental microquirúrgico',monto:69751000,cat:'Equipamiento',score:34,dias:2,cierre:'17 jul 2026',ref:DATA.planas,fam:FAM.pabellon,hit:'set* quirurgic*',debil:1},
+ {t:'Licitación',cod:'3391-13-LR26',nom:'Suministro de reactivos e insumos para laboratorio clínico',monto:692657533,cat:'Laboratorio',score:16,dias:2,cierre:'17 jul 2026',ref:DATA.gasas,fam:null}
 ];
 var DIRSIG=['El organismo adjudicó los últimos 3 procesos del rubro al mismo proveedor.','Especificaciones técnicas compatibles con un único fabricante.','Plazo de postulación acotado — menos de 7 días corridos.'];
 var opf='todas';
@@ -337,10 +350,19 @@ function renderOpp(){
     var tag=o.t==='Compra ágil'?'<span style="color:var(--text-accent)">Compra ágil</span>':'Licitación';
     var urg=o.dias<=2?'color:var(--text-danger);font-weight:500':'color:var(--text-secondary)';
     var pl=o.dias===1?'día':'días';
-    return '<div class="row" data-cod="'+o.cod+'"><div style="min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+o.nom+(o.dir?' <i class="ti ti-flag" style="color:var(--text-warning);font-size:13px"></i>':'')+(o.hist?' <i class="ti ti-history" style="color:var(--text-success);font-size:13px"></i>':'')+'</div><div style="font-size:12px;color:var(--text-secondary)">'+tag+' · '+money(o.monto)+' · '+o.cat+' · <span style="'+urg+'">cierra en '+o.dias+' '+pl+'</span> · '+o.cod+'</div></div><div class="badge" style="'+bs+'"><div class="n">'+o.score+'</div><div class="t">score</div></div></div>';
+    var fam=o.fam?('<span style="background:var(--bg-accent);color:var(--text-accent);border-radius:99px;padding:1px 8px;font-size:11px;white-space:nowrap">'+(o.debil?'~ ':'')+o.fam.n+'</span>'):'<span style="background:var(--surface-1);color:var(--text-muted);border-radius:99px;padding:1px 8px;font-size:11px;white-space:nowrap">sin familia</span>';
+    return '<div class="row" data-cod="'+o.cod+'"><div style="min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+o.nom+(o.dir?' <i class="ti ti-flag" style="color:var(--text-warning);font-size:13px"></i>':'')+(o.hist?' <i class="ti ti-history" style="color:var(--text-success);font-size:13px"></i>':'')+'</div><div style="font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:6px;margin-top:2px">'+fam+'<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+tag+' · '+money(o.monto)+' · <span style="'+urg+'">cierra en '+o.dias+' '+pl+'</span> · '+o.cod+'</span></div></div><div class="badge" style="'+bs+'"><div class="n">'+o.score+'</div><div class="t">score</div></div></div>';
   }).join('');
   document.querySelectorAll('#oportList .row').forEach(function(r){r.onclick=function(){showOpp(r.dataset.cod)}});
 }
+var famPanel=document.getElementById('famPanel');
+famPanel.innerHTML='<div style="font-size:14px;font-weight:500;margin-bottom:3px">Tus familias de patrones</div>'
+ +'<div style="font-size:12.5px;color:var(--text-secondary);margin-bottom:14px">Propuestas <b>automáticamente</b> desde tu historial real de ventas: cada familia agrupa productos que ya le vendiste al Estado. Puedes editarlas cuando quieras.</div>'
+ +Object.keys(FAM).map(function(k){var f=FAM[k];var n=OPP.filter(function(o){return o.fam===f}).length;
+   return '<div style="border:.5px solid var(--border);border-radius:var(--radius);padding:11px 13px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px"><span style="font-size:13px;font-weight:500">'+f.n+'</span><span style="font-size:11.5px;color:var(--text-secondary)">'+big(f.venta)+' vendidos · <b style="color:var(--text-accent)">'+n+'</b> oportunidad'+(n===1?'':'es')+' hoy</span></div><div style="font-size:11.5px;color:var(--text-secondary);line-height:1.6"><code style="background:var(--surface-1);border-radius:4px;padding:1px 6px">'+f.pat+'</code><br>'+f.prods+'</div></div>';
+ }).join('')
+ +'<div style="background:var(--bg-success);color:var(--text-success);border-radius:var(--radius);padding:10px 13px;font-size:12.5px;line-height:1.55;margin-top:4px"><i class="ti ti-wand" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Sin configurar nada: se derivan de lo que realmente vendiste. Nada de escribir 40 patrones a mano ni de ir añadiendo exclusiones cada vez que se cuela un falso positivo.</div>';
+document.getElementById('famBtn').onclick=function(){famPanel.style.display=famPanel.style.display==='none'?'block':'none';};
 document.querySelectorAll('#opfilter button').forEach(function(b){b.onclick=function(){opf=b.dataset.f;document.querySelectorAll('#opfilter button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');renderOpp();document.getElementById('oportDetail').innerHTML='';}});
 
 function bidderProbs(bs){var avg=bs.reduce(function(s,b){return s+b.price},0)/bs.length||1;var raws=bs.map(function(b){return winProbAt(b.price/avg);});var tot=raws.reduce(function(s,r){return s+r},0)||1;return bs.map(function(b,i){return {name:b.name,price:b.price,me:b.me,prob:Math.round(raws[i]/tot*100)};});}
@@ -366,8 +388,11 @@ function showOpp(cod){
   var bases='<div style="border:.5px solid var(--border);border-radius:var(--radius);padding:12px;margin-top:12px"><div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px"><i class="ti ti-message-question" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Pregunta sobre esta oportunidad y sus bases</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">'+['¿Qué garantía piden?','¿Cuándo cierra?','¿Cómo se evalúa?'].map(function(q){return '<button class="chip" data-oq="'+q+'">'+q+'</button>'}).join('')+'</div><div id="oppQAns" style="margin-bottom:8px"></div>'+basesBtn+'</div>';
   var dirP=o.dir?'<div style="background:var(--bg-warning);color:var(--text-warning);border-radius:var(--radius);padding:10px 13px;font-size:13px;line-height:1.55;margin-top:12px"><i class="ti ti-flag" style="font-size:15px;vertical-align:-2px;margin-right:5px"></i><b>Posible licitación dirigida</b> — señales: '+DIRSIG.map(function(s){return s.replace(/\.$/,'')}).join(' · ')+'.</div>':'';
   var histP=o.hist?'<div style="background:var(--bg-success);color:var(--text-success);border-radius:var(--radius);padding:10px 13px;font-size:13px;line-height:1.55;margin-top:12px"><i class="ti ti-history" style="font-size:15px;vertical-align:-2px;margin-right:5px"></i><b>Tu historial juega a favor.</b> '+o.hist+'</div>':'';
+  var famP=o.fam
+   ? '<div style="border:.5px solid var(--border);border-radius:var(--radius);padding:12px;margin-top:12px"><div style="font-size:12px;color:var(--text-secondary);margin-bottom:7px"><i class="ti ti-category-2" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Por qué te la mostramos — familia que hizo match</div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px"><span style="background:var(--bg-accent);color:var(--text-accent);border-radius:99px;padding:3px 11px;font-size:12.5px;font-weight:500">'+o.fam.n+'</span>'+(o.debil?'<span style="font-size:11.5px;color:var(--text-warning)">match débil — solo por un patrón genérico</span>':'')+'</div><div style="font-size:12px;color:var(--text-secondary);line-height:1.6">Patrón que coincidió: <code style="background:var(--surface-1);border-radius:4px;padding:1px 6px;color:var(--text-primary)">'+o.hit+'</code><br>Productos de la familia: '+o.fam.prods+'<br>Ya vendiste <b style="color:var(--text-primary)">'+big(o.fam.venta)+'</b> de esta familia al Estado.</div></div>'
+   : '<div style="background:var(--surface-1);border-radius:var(--radius);padding:10px 13px;font-size:13px;line-height:1.55;margin-top:12px;color:var(--text-secondary)"><i class="ti ti-category-2" style="font-size:15px;vertical-align:-2px;margin-right:5px"></i><b style="color:var(--text-primary)">Ninguna de tus familias hace match.</b> Por eso el score es '+o.score+': no vendes reactivos de laboratorio. Aparece solo porque comparte el rubro salud.</div>';
   var pl=o.dias===1?'día':'días', uc=o.dias<=2?'danger':'accent';
-  document.getElementById('oportDetail').innerHTML='<div class="card"><div style="display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:12px"><div><div style="font-size:15px;font-weight:500">'+o.nom+'</div><div style="font-size:12px;color:var(--text-secondary)">'+o.t+' · '+o.cod+' · presupuesto '+money(o.monto)+'</div></div><div style="text-align:right;flex:0 0 auto"><span class="mchip">score '+o.score+'</span><div style="font-size:11.5px;margin-top:5px;color:var(--text-'+uc+')">cierra en '+o.dias+' '+pl+' · '+o.cierre+'</div></div></div><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">'+ref+comp+orga+'</div>'+histP+probBlock+bases+dirP+'</div>';
+  document.getElementById('oportDetail').innerHTML='<div class="card"><div style="display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:12px"><div><div style="font-size:15px;font-weight:500">'+o.nom+'</div><div style="font-size:12px;color:var(--text-secondary)">'+o.t+' · '+o.cod+' · presupuesto '+money(o.monto)+'</div></div><div style="text-align:right;flex:0 0 auto"><span class="mchip">score '+o.score+'</span><div style="font-size:11.5px;margin-top:5px;color:var(--text-'+uc+')">cierra en '+o.dias+' '+pl+' · '+o.cierre+'</div></div></div><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">'+ref+comp+orga+'</div>'+famP+histP+probBlock+bases+dirP+'</div>';
   document.querySelectorAll('#oportDetail [data-oq]').forEach(function(b){b.onclick=function(){document.getElementById('oppQAns').innerHTML='<div style="background:var(--surface-1);border-radius:var(--radius);padding:9px 11px;font-size:12.5px;line-height:1.5"><i class="ti ti-sparkles" style="font-size:13px;vertical-align:-2px;margin-right:4px;color:var(--text-accent)"></i>'+ans[b.dataset.oq]+'</div>';}});
 }
 
@@ -409,6 +434,14 @@ var POST=[
 document.getElementById('postStats').innerHTML=[['Postulaciones',PSTATS.total],['Adjudicadas',PSTATS.ganadas],['Tasa de éxito',PSTATS.tasa+'%'],['Adjudicado',big(PSTATS.adjudicado)]].map(function(m){return '<div class="metric"><div class="l">'+m[0]+'</div><div class="v">'+m[1]+'</div></div>'}).join('');
 var pf='todas';
 function renderPost(){
+  if(pf==='abiertas'){
+    document.getElementById('postList').innerHTML='<div class="card" style="text-align:center;padding:34px 22px"><i class="ti ti-clock-pause" style="font-size:30px;color:var(--text-muted)"></i>'
+     +'<div style="font-size:14px;font-weight:500;margin:10px 0 6px">No hay postulaciones en evaluación</div>'
+     +'<div style="font-size:12.5px;color:var(--text-secondary);line-height:1.65;max-width:520px;margin:0 auto">Mercado Público <b>no publica las ofertas hasta que el proceso cierra</b>: mientras una licitación sigue abierta, ni nosotros ni nadie puede ver quién ofertó ni a cuánto.<br><br>Por eso, para seguir aquí lo que tienes en juego, tú marcas la licitación como <b>postulada</b> al ofertar. En cuanto se publique la adjudicación, pasa sola a <b>Cerradas</b> con el resultado y todas las ofertas de tus competidores.</div>'
+     +'<div style="margin-top:16px"><button class="chip" onclick="goSection(\'oport\')">Ver oportunidades abiertas ↗</button></div></div>';
+    document.getElementById('postDetail').innerHTML='';
+    return;
+  }
   var list=POST.filter(function(o){return pf==='todas'||(pf==='win'?o.gane:!o.gane)});
   document.getElementById('postList').innerHTML=list.map(function(o){
     var c=o.gane?'success':'danger', txt=o.gane?'ganada':'perdida', ic=o.gane?'ti-check':'ti-x';
