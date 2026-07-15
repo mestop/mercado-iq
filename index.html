@@ -24,7 +24,7 @@ html[data-theme="dark"]{
   --surface-0:#191918; --surface-1:#212120; --surface-2:#2a2a27;
   --text-primary:#f4f3ee; --text-secondary:#c3c2b7; --text-muted:#8a887f;
   --border:rgba(255,255,255,.11); --border-strong:rgba(255,255,255,.19);
-  --bg-accent:#0d2c48; --text-accent:#85b7eb; --border-accent:#185fa5; --fill-accent:#378add;
+  --bg-accent:#0d2c48; --text-accent:#85b7eb; --border-accent:#185fa5;
   --bg-success:#0c342b; --text-success:#5dcaa5;
   --bg-danger:#3a1414; --text-danger:#f09595;
   --bg-warning:#3a2a0c; --text-warning:#ef9f27;
@@ -32,7 +32,8 @@ html[data-theme="dark"]{
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:var(--font-sans);background:var(--surface-0);color:var(--text-primary);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
-.app{display:grid;grid-template-columns:236px 1fr;height:100vh}
+.app{display:none;grid-template-columns:250px 1fr;height:100vh}
+.app.on{display:grid}
 .side{background:var(--surface-1);border-right:.5px solid var(--border);padding:16px 12px;display:flex;flex-direction:column;overflow:auto}
 .brand{display:flex;align-items:center;gap:9px;padding:6px 8px 18px}
 .brand i{font-size:22px;color:var(--text-accent)}
@@ -42,20 +43,18 @@ body{margin:0;font-family:var(--font-sans);background:var(--surface-0);color:var
 .nav button i{font-size:18px}
 .nav button:hover{background:var(--surface-2)}
 .nav button.on{background:var(--bg-accent);color:var(--text-accent)}
-.foso{margin-top:auto;padding:12px 10px 4px;border-top:.5px solid var(--border);font-size:12px;color:var(--text-secondary);line-height:1.9}
-.foso b{color:var(--text-primary);font-weight:500}
+.mine{margin-top:auto;padding:12px 10px 4px;border-top:.5px solid var(--border);font-size:12px;color:var(--text-secondary);line-height:1.8}
+.mine b{color:var(--text-primary);font-weight:500}
 .main{display:flex;flex-direction:column;min-width:0;overflow:hidden}
 .top{display:flex;align-items:center;gap:14px;padding:14px 24px;border-bottom:.5px solid var(--border);background:var(--surface-0)}
 .top h1{font-size:18px;font-weight:500;margin:0;flex:1}
-.search{position:relative;width:280px}
+.search{position:relative;width:260px}
 .search i{position:absolute;left:11px;top:9px;color:var(--text-muted);font-size:16px}
 .search input{width:100%;height:36px;padding:0 12px 0 33px;border-radius:var(--radius);border:.5px solid var(--border);background:var(--surface-2);color:var(--text-primary);font-family:inherit;font-size:13px}
-.search input:focus{outline:none;border-color:var(--border-accent);box-shadow:0 0 0 3px var(--bg-accent)}
 .iconbtn{width:36px;height:36px;border-radius:var(--radius);border:.5px solid var(--border);background:var(--surface-2);color:var(--text-secondary);cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center}
-.iconbtn:hover{border-color:var(--border-strong)}
-.avatar{width:34px;height:34px;border-radius:50%;background:var(--bg-accent);color:var(--text-accent);display:flex;align-items:center;justify-content:center;font-weight:500;font-size:13px}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--bg-accent);color:var(--text-accent);display:flex;align-items:center;justify-content:center;font-weight:500;font-size:12px}
 .content{padding:24px;overflow-y:auto;overflow-x:hidden;flex:1}
-.sec{display:none;max-width:820px}
+.sec{display:none;max-width:860px}
 .sec.on{display:block}
 .h2{font-size:16px;font-weight:500;margin:0 0 4px}
 .sub{font-size:13px;color:var(--text-secondary);margin:0 0 16px}
@@ -63,9 +62,6 @@ body{margin:0;font-family:var(--font-sans);background:var(--surface-0);color:var
 .chip.on{background:var(--fill-primary);color:var(--on-primary);border-color:transparent}
 .mchip{background:var(--surface-1);border:.5px solid var(--border);border-radius:var(--radius);padding:7px 11px;font-size:12.5px;color:var(--text-secondary)}
 .mchip b{color:var(--text-primary);font-weight:500}
-.seg{display:inline-flex;border:.5px solid var(--border-strong);border-radius:var(--radius);overflow:hidden}
-.seg button{border:none;background:transparent;font-size:12.5px;font-family:inherit;padding:7px 14px;cursor:pointer;color:var(--text-secondary)}
-.seg button.on{background:var(--surface-1);color:var(--text-primary);font-weight:500}
 .card{background:var(--surface-2);border:.5px solid var(--border);border-radius:12px;padding:18px}
 .metric{background:var(--surface-1);border-radius:var(--radius);padding:12px}
 .metric .l{font-size:12px;color:var(--text-secondary)}
@@ -77,15 +73,41 @@ body{margin:0;font-family:var(--font-sans);background:var(--surface-0);color:var
 .badge .t{font-size:10px}
 .bar{height:9px;background:var(--surface-1);border-radius:99px;position:relative}
 .bar>div{position:absolute;top:0;bottom:0;border-radius:99px;background:var(--fill-accent)}
-button:focus-visible,input:focus-visible{outline:2px solid var(--fill-accent);outline-offset:1px}
 .rf{width:100%;height:34px;padding:0 10px;border-radius:var(--radius);border:.5px solid var(--border);background:var(--surface-1);color:var(--text-primary);font-family:inherit;font-size:13px}
-.rf:focus{outline:none;border-color:var(--border-accent)}
 .chatbubble-u{background:var(--fill-primary);color:var(--on-primary);border-radius:14px 14px 4px 14px;padding:10px 13px;font-size:13px;max-width:78%;line-height:1.5}
 .chatbubble-a{background:var(--surface-1);border-radius:4px 14px 14px 14px;padding:11px 13px;font-size:13px;line-height:1.6;max-width:86%}
+/* login */
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.loginbox{width:100%;max-width:420px}
+.logincard{background:var(--surface-2);border:.5px solid var(--border);border-radius:14px;padding:26px}
+.acct{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:.5px solid var(--border-strong);background:var(--surface-1);border-radius:10px;padding:13px 14px;cursor:pointer;font-family:inherit;margin-bottom:10px}
+.acct:hover{border-color:var(--border-accent);background:var(--bg-accent)}
+.btn{width:100%;height:40px;border:none;border-radius:var(--radius);background:var(--fill-primary);color:var(--on-primary);font-family:inherit;font-size:14px;font-weight:500;cursor:pointer}
 </style>
 </head>
 <body>
-<div class="app">
+
+<div class="login" id="login">
+  <div class="loginbox">
+    <div class="brand" style="justify-content:center;padding-bottom:14px"><i class="ti ti-database"></i><span style="font-size:19px">MercadoIQ</span></div>
+    <div style="text-align:center;font-size:13px;color:var(--text-secondary);margin-bottom:18px">Inteligencia de compras públicas · Chile</div>
+    <div class="logincard">
+      <div style="font-size:15px;font-weight:500;margin-bottom:4px">Ingresa con tu RUT de proveedor</div>
+      <div style="font-size:12.5px;color:var(--text-secondary);margin-bottom:16px">Cargamos tu perfil automáticamente desde tu historial real de ventas al Estado. Sin configurar nada.</div>
+      <button class="acct" id="acct1">
+        <div style="width:38px;height:38px;flex:0 0 38px;border-radius:50%;background:var(--bg-accent);color:var(--text-accent);display:flex;align-items:center;justify-content:center;font-weight:500;font-size:13px">AP</div>
+        <div style="min-width:0">
+          <div style="font-size:13px;font-weight:500;color:var(--text-primary)">Comercializadora y Distribuidora AP SpA</div>
+          <div style="font-size:12px;color:var(--text-secondary)">RUT 77.646.274-8 · Insumos clínicos</div>
+        </div>
+      </button>
+      <button class="btn" id="enterBtn" style="margin-top:8px">Entrar</button>
+      <div style="font-size:11.5px;color:var(--text-muted);margin-top:14px;text-align:center">Demo · el perfil y los datos provienen de Mercado Público</div>
+    </div>
+  </div>
+</div>
+
+<div class="app" id="app">
   <aside class="side">
     <div class="brand"><i class="ti ti-database"></i><span>MercadoIQ</span></div>
     <nav class="nav" id="nav">
@@ -97,30 +119,28 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--fill-accent);ou
       <button data-s="alertas"><i class="ti ti-bell"></i>Alertas</button>
       <button data-s="copiloto"><i class="ti ti-sparkles"></i>Copiloto IA</button>
     </nav>
-    <div class="foso">
-      <div style="color:var(--text-muted);margin-bottom:4px">El foso de datos</div>
-      <div><b>2,7M</b> licitaciones</div>
-      <div><b>29M</b> órdenes de compra</div>
-      <div><b>37M</b> adjudicaciones</div>
-      <div><b>18</b> años · actualizado al día</div>
+    <div class="mine">
+      <div style="color:var(--text-muted);margin-bottom:4px">Tu empresa</div>
+      <div style="color:var(--text-primary);font-weight:500;line-height:1.35;margin-bottom:6px">Comercializadora y Distribuidora AP SpA</div>
+      <div>RUT <b>77.646.274-8</b></div>
+      <div><b>196</b> órdenes ganadas</div>
+      <div><b>$241 M</b> vendidos al Estado</div>
+      <div>activa desde <b>2023</b></div>
     </div>
   </aside>
 
   <div class="main">
     <div class="top">
       <h1 id="pageTitle">Precio de referencia</h1>
-      <div class="search"><i class="ti ti-search"></i><input id="globalSearch" placeholder="Buscar producto, proveedor u organismo"/></div>
-      <button class="iconbtn" id="themeBtn" title="Cambiar tema"><i class="ti ti-moon"></i></button>
-      <div class="avatar">MG</div>
+      <div class="search"><i class="ti ti-search"></i><input placeholder="Buscar producto, proveedor u organismo"/></div>
+      <button class="iconbtn" id="themeBtn"><i class="ti ti-moon"></i></button>
+      <div class="avatar">AP</div>
     </div>
     <div class="content">
 
       <section class="sec on" id="sec-precio">
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
-          <div class="mchip"><b>94,5%</b> productos normalizados</div>
-          <div class="mchip"><b>13.648</b> productos con precio de referencia</div>
-          <div class="mchip"><b>79M</b> líneas de compra analizadas</div>
-        </div>
+        <div class="h2">Tus productos</div>
+        <div class="sub">Precio de referencia real de lo que tu empresa vende al Estado, calculado sobre el histórico de Mercado Público.</div>
         <div id="prods" style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px"></div>
         <div id="priceCard"></div>
         <div id="winSim"></div>
@@ -128,13 +148,13 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--fill-accent);ou
 
       <section class="sec" id="sec-oport">
         <div class="h2">Oportunidades abiertas</div>
-        <div class="sub">Publicaciones reales de los últimos días, rankeadas por afinidad con tu perfil.</div>
+        <div class="sub">Licitaciones y compras ágiles publicadas ahora, rankeadas por afinidad con lo que realmente vendes.</div>
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
-          <div class="mchip"><i class="ti ti-user-check" style="font-size:14px;vertical-align:-2px;margin-right:3px"></i>Perfil: <b>insumos médicos y laboratorio</b></div>
-          <div class="seg" id="opfilter" style="margin-left:auto">
-            <button data-f="todas" class="on">Todas</button>
-            <button data-f="Licitación">Licitaciones</button>
-            <button data-f="Compra ágil">Compra ágil</button>
+          <div class="mchip"><i class="ti ti-user-check" style="font-size:14px;vertical-align:-2px;margin-right:3px"></i>Perfil detectado: <b>insumos clínicos y quirúrgicos</b></div>
+          <div class="seg" id="opfilter" style="margin-left:auto;display:inline-flex;border:.5px solid var(--border-strong);border-radius:var(--radius);overflow:hidden">
+            <button data-f="todas" class="chip on" style="border:none;border-radius:0">Todas</button>
+            <button data-f="Licitación" class="chip" style="border:none;border-radius:0">Licitaciones</button>
+            <button data-f="Compra ágil" class="chip" style="border:none;border-radius:0">Compra ágil</button>
           </div>
         </div>
         <div id="oportList"></div>
@@ -143,24 +163,25 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--fill-accent);ou
 
       <section class="sec" id="sec-postuladas">
         <div class="h2">Postulaciones abiertas</div>
-        <div class="sub">Licitaciones y compras ágiles donde ya ofertaste y siguen en evaluación. Tu probabilidad de ganar frente a cada competidor que postuló.</div>
+        <div class="sub">Procesos donde ya ofertaste y siguen en evaluación, con tu probabilidad frente a cada competidor.</div>
+        <div class="mchip" style="display:inline-block;margin-bottom:14px"><i class="ti ti-info-circle" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Demo: las postulaciones son simuladas (Mercado Público no publica este dato). Los competidores y precios sí son reales.</div>
         <div id="postList"></div>
         <div id="postDetail" style="margin-top:14px"></div>
       </section>
 
       <section class="sec" id="sec-comp">
-        <div class="h2">Competencia</div>
-        <div class="sub">Proveedores reales del Estado. Elige uno para ver su ficha — datos acumulados 2012 a 2026.</div>
-        <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:18px">
+        <div class="h2">Tu competencia real</div>
+        <div class="sub">Proveedores que venden los mismos productos que tú al Estado. Datos acumulados de Mercado Público.</div>
+        <div style="display:grid;grid-template-columns:210px minmax(0,1fr);gap:18px">
           <div id="supList" style="display:flex;flex-direction:column;gap:4px"></div>
           <div id="supCard"></div>
         </div>
       </section>
 
       <section class="sec" id="sec-org">
-        <div class="h2">Organismos compradores</div>
-        <div class="sub">Perfil de gasto real de cada organismo del Estado. Elige uno — datos acumulados 2012 a 2026.</div>
-        <div style="display:grid;grid-template-columns:224px minmax(0,1fr);gap:18px">
+        <div class="h2">Tus organismos compradores</div>
+        <div class="sub">Los hospitales y servicios de salud que te compran, con su índice de riesgo real.</div>
+        <div style="display:grid;grid-template-columns:230px minmax(0,1fr);gap:18px">
           <div id="orgList" style="display:flex;flex-direction:column;gap:4px"></div>
           <div id="orgCard"></div>
         </div>
@@ -168,7 +189,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--fill-accent);ou
 
       <section class="sec" id="sec-alertas">
         <div class="h2">Alertas</div>
-        <div class="sub">Multicanal, y cada aviso llega con la recomendación de precio y el competidor probable dentro.</div>
+        <div class="sub">Multicanal, con la recomendación de precio y el competidor probable dentro de cada aviso.</div>
         <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px">Canales — haz clic para activar o silenciar</div>
         <div id="canales" style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px"></div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
@@ -179,7 +200,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--fill-accent);ou
         <div id="ruleForm" class="card" style="display:none;margin-top:10px">
           <div style="font-size:13px;font-weight:500;margin-bottom:12px">Nueva regla de alerta</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-            <div><div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px">Producto o palabra clave</div><input id="rfKw" class="rf" placeholder="tóner, frascos, reactivos…"/></div>
+            <div><div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px">Producto o palabra clave</div><input id="rfKw" class="rf" placeholder="gasas, sábanas, quirúrgico…"/></div>
             <div><div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px">Tipo</div><select id="rfTipo" class="rf"><option>Compra ágil</option><option>Licitación</option><option>Ambos</option></select></div>
             <div><div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px">Score mínimo</div><input id="rfScore" class="rf" type="number" value="80" min="0" max="100"/></div>
             <div><div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px">Canal</div><select id="rfCanal" class="rf"><option>WhatsApp</option><option>Email</option><option>Telegram</option></select></div>
@@ -194,14 +215,17 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--fill-accent);ou
       <section class="sec" id="sec-copiloto">
         <div class="h2">Copiloto IA</div>
         <div class="sub">Pregunta en lenguaje natural sobre tus datos, o analiza las bases de una licitación.</div>
-        <div class="seg" id="copMode" style="margin-bottom:14px"><button data-m="chat" class="on">Chat general</button><button data-m="bases">Analizar bases</button></div>
+        <div class="seg" id="copMode" style="margin-bottom:14px;display:inline-flex;border:.5px solid var(--border-strong);border-radius:var(--radius);overflow:hidden">
+          <button data-m="chat" class="chip on" style="border:none;border-radius:0">Chat general</button>
+          <button data-m="bases" class="chip" style="border:none;border-radius:0">Analizar bases</button>
+        </div>
         <div id="chatView">
           <div class="card" style="padding:0;display:flex;flex-direction:column;height:440px">
             <div id="chatMsgs" style="flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:12px"></div>
             <div style="padding:12px;border-top:.5px solid var(--border)">
               <div id="chatSug" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"></div>
               <div style="display:flex;gap:8px">
-                <input id="chatInput" class="rf" style="flex:1;height:38px" placeholder="Pregunta sobre precios, competencia u oportunidades"/>
+                <input id="chatInput" class="rf" style="flex:1;height:38px" placeholder="Pregunta sobre tus precios, competidores u oportunidades"/>
                 <button class="chip" id="chatSend" style="background:var(--fill-primary);color:var(--on-primary);border-color:transparent;padding:0 16px"><i class="ti ti-send" style="font-size:15px;vertical-align:-2px"></i></button>
               </div>
             </div>
@@ -209,7 +233,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--fill-accent);ou
         </div>
         <div id="basesView" style="display:none">
           <div style="font-size:13px;color:var(--text-secondary);margin-bottom:6px">Selecciona una licitación para que la IA lea sus bases</div>
-          <select id="baseSel" class="rf" style="width:100%;max-width:520px;margin-bottom:14px"></select>
+          <select id="baseSel" class="rf" style="width:100%;max-width:560px;margin-bottom:14px"></select>
           <div id="baseCard"></div>
         </div>
       </section>
@@ -222,126 +246,185 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--fill-accent);ou
 var money=function(v){return '$'+Math.round(v).toLocaleString('es-CL')};
 var num=function(v){return Number(v).toLocaleString('es-CL')};
 var big=function(v){return v>=1e12?('$'+(v/1e12).toLocaleString('es-CL',{maximumFractionDigits:2})+' bill.'):'$'+Math.round(v/1e6).toLocaleString('es-CL')+' M'};
+var moneyC=function(v){return v>=1e6?('$'+(Math.round(v/1e5)/10).toLocaleString('es-CL')+'M'):money(v)};
 
+/* ---- LOGIN ---- */
+function entrar(){document.getElementById('login').style.display='none';document.getElementById('app').classList.add('on');}
+document.getElementById('acct1').onclick=entrar;
+document.getElementById('enterBtn').onclick=entrar;
+
+/* ---- DATOS REALES DE AP SPA ---- */
+/* Productos que AP SPA realmente vende, con precio de referencia real (Mercado Público) */
 var DATA={
-  toner:{label:'Tóner',name:'Tóner',unit:'unidad',n:224765,p25:18900,med:40200,p75:70500,naive:61,naiveN:420854,units:[['Unidad',224765,40200],['Tambor',149,44900],['Cartucho',1207,39033],['Caja',185,36200],['Pack',1965,155000]],curve:[[0.45,24.7],[0.725,24.7],[0.9,16.3],[1.0,10.5],[1.125,6.3],[1.35,4.5],[1.9,3.8]],curveN:54059,sens:'commodity — el precio manda'},
-  pasajes:{label:'Pasajes aéreos',name:'Pasajes aéreos',unit:'unidad',n:1326514,p25:99812,med:146816,p75:215032,naive:null,units:[['Unidad',1326514,146816]],curve:[[0.45,36],[0.725,48],[0.9,47],[1.0,46],[1.125,36],[1.35,30],[1.9,28]],curveN:1769,sens:'diferenciado — el precio pesa poco'},
-  diesel:{label:'Diésel',name:'Diésel',unit:'litro',n:100519,p25:535,med:632,p75:797,naive:null,units:[['Litro',100519,632]]},
-  papel:{label:'Papel multiuso',name:'Papel multiuso',unit:'resma',n:8821,p25:2941,med:3907,p75:6638,naive:2395,naiveN:284112,units:[['Resma',8821,3907],['Caja',5362,10425],['Rollo',2452,7900],['Unidad',47506,1230],['Pliego',5046,172]],curve:[[0.45,30.9],[0.725,25.1],[0.9,19.9],[1.0,15.1],[1.125,11.6],[1.35,7.3],[1.9,4.0]],curveN:9424,sens:'commodity — el precio manda'},
-  verduras:{label:'Verduras',name:'Verduras frescas',unit:'kilogramo',n:380070,p25:600,med:896,p75:1500,naive:null,units:[['Kilogramo',380070,896]]},
-  examenes:{label:'Exámenes médicos',name:'Exámenes médicos',unit:'unidad',n:322453,p25:5705,med:39930,p75:137632,naive:null,units:[['Unidad',322453,39930]]}
+  planas:{label:'Planas quirúrgicas',name:'Planas quirúrgicas',unit:'unidad',n:2866,p25:1600,med:12400,p75:20000,mio:45589780,miasLineas:11},
+  manta:{label:'Manta quirúrgica',name:'Manta quirúrgica / calentar soluciones',unit:'unidad',n:484,p25:7500,med:11500,p75:13590,mio:23443400,miasLineas:6},
+  sabanas:{label:'Sábanas de hospital',name:'Sábanas de hospital',unit:'unidad',n:5246,p25:1500,med:2880,p75:4490,mio:22444600,miasLineas:10},
+  cubre:{label:'Cubre camillas',name:'Cubre camillas',unit:'unidad',n:6170,p25:1100,med:1853,p75:3360,mio:17199700,miasLineas:23},
+  protege:{label:'Protege sábanas',name:'Protege sábanas impermeables',unit:'unidad',n:589,p25:580,med:2900,p75:11100,mio:12681000,miasLineas:5},
+  gelatina:{label:'Esponjas de gelatina',name:'Esponjas de gelatina absorbible',unit:'unidad',n:5053,p25:2900,med:5520,p75:35000,mio:9829300,miasLineas:14},
+  gasas:{label:'Gasas quirúrgicas',name:'Gasas o curetas quirúrgicas',unit:'unidad',n:11509,p25:90,med:340,p75:4389,mio:4743500,miasLineas:20},
+  vendas:{label:'Vendas de gasa',name:'Vendas de gasa',unit:'unidad',n:25228,p25:80,med:215,p75:1200,mio:3880500,miasLineas:7}
 };
-var cur='toner',mode='smart';
+var cur='planas';
 var prods=document.getElementById('prods');
 prods.innerHTML=Object.keys(DATA).map(function(k){return '<button class="chip'+(k===cur?' on':'')+'" data-p="'+k+'">'+DATA[k].label+'</button>'}).join('');
-var curProduct=null;
-function renderCard(){
-  var p=curProduct||DATA[cur],hasN=p.naive!=null; if(!hasN)mode='smart';
-  var showN=(mode==='naive'&&hasN),bigv=showN?p.naive:p.med;
-  var mx=p.p75*1.25,L=p.p25/mx*100,W=(p.p75-p.p25)/mx*100,M=p.med/mx*100;
-  var umx=Math.max.apply(null,p.units.map(function(u){return u[2]}));
-  var urows=p.units.slice(0,5).map(function(u){return '<div style="display:flex;align-items:center;gap:10px;margin:6px 0"><span style="width:90px;font-size:12.5px;color:var(--text-secondary)">'+u[0]+'</span><div class="bar" style="flex:1;height:17px"><div style="width:'+(u[2]/umx*100)+'%"></div></div><span style="width:74px;text-align:right;font-size:12.5px;font-weight:500">'+money(u[2])+'</span></div>'}).join('');
-  var toggle=hasN?('<div class="seg" id="toggle" style="margin-bottom:16px"><button data-m="naive" class="'+(mode==='naive'?'on':'')+'">Análisis ingenuo</button><button data-m="smart" class="'+(mode==='smart'?'on':'')+'">Inteligente</button></div>'):'';
-  var note=p.est?'<div style="background:var(--bg-warning);color:var(--text-warning);border-radius:var(--radius);padding:10px 13px;font-size:12.5px;line-height:1.55;margin-bottom:16px"><i class="ti ti-tag" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Referencia estimada por rubro para esta oportunidad; el histórico exacto se obtiene con el código de producto de la licitación.</div>':(showN?'<div style="background:var(--bg-danger);color:var(--text-danger);border-radius:var(--radius);padding:10px 13px;font-size:12.5px;line-height:1.55;margin-bottom:16px"><i class="ti ti-alert-triangle" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Promedio sin segmentar, arrastrado por '+num(p.naiveN)+' líneas sin unidad de medida. Inservible para decidir.</div>':'<div style="background:var(--bg-success);color:var(--text-success);border-radius:var(--radius);padding:10px 13px;font-size:12.5px;line-height:1.55;margin-bottom:16px"><i class="ti ti-circle-check" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Segmentado por unidad real ('+p.unit+') y limpio de outliers, sobre '+num(p.n)+' compras.</div>');
-  document.getElementById('priceCard').innerHTML='<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px"><div style="font-size:17px;font-weight:500">'+p.name+'</div><div style="font-size:12px;color:var(--text-muted)">'+(p.n!=null?num(p.n)+' compras':'referencia estimada')+' · por '+p.unit+'</div></div>'+toggle+'<div style="font-family:var(--font-voice);font-size:52px;line-height:1;color:'+(showN?'var(--text-danger)':'var(--text-primary)')+'">'+money(bigv)+'</div><div style="font-size:12.5px;color:var(--text-secondary);margin:7px 0 16px">precio de referencia'+(showN?' (ingenuo)':'')+'</div>'+note+'<div class="bar" style="margin:8px 0 7px"><div style="left:'+L+'%;width:'+W+'%"></div><div style="left:'+M+'%;top:-3px;width:2px;height:15px;background:var(--text-primary);border-radius:0"></div></div><div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-muted);margin-bottom:20px"><span>p25 '+money(p.p25)+'</span><span style="color:var(--text-primary)">mediana '+money(p.med)+'</span><span>p75 '+money(p.p75)+'</span></div><div style="font-size:13px;color:var(--text-secondary);margin-bottom:6px">Desglose por unidad de medida</div>'+urows+'<div style="border-top:.5px solid var(--border);margin-top:16px;padding-top:14px;font-size:13px;line-height:1.55"><i class="ti ti-bulb" style="font-size:16px;vertical-align:-2px;margin-right:5px;color:var(--text-accent)"></i>Para ganar, oferta bajo <b>'+money(p.med)+'</b>. El cuartil más competitivo cerró en <b>'+money(p.p25)+'</b>.</div></div>';
-  var t=document.getElementById('toggle'); if(t)t.querySelectorAll('button').forEach(function(b){b.onclick=function(){mode=b.dataset.m;renderCard();}});
-  renderSim(p);
-}
+
+/* Curva de win-probability real (calibrada con 1,7M ofertas adjudicadas) */
 var WINCURVE=[[0.5,28.6],[0.675,26.9],[0.8,24.1],[0.89,21.5],[0.95,20.0],[1.0,20.1],[1.06,12.4],[1.175,9.4],[1.375,7.6],[1.8,5.6]];
 function winProbAt(ratio,c){c=c||WINCURVE;if(ratio<=c[0][0])return c[0][1];if(ratio>=c[c.length-1][0])return c[c.length-1][1];for(var i=1;i<c.length;i++){if(ratio<=c[i][0]){var a=c[i-1],bb=c[i];return a[1]+(bb[1]-a[1])*(ratio-a[0])/(bb[0]-a[0]);}}return c[c.length-1][1];}
-function renderSim(p){var lo=Math.round(p.p25*0.6),hi=Math.round(p.p75*1.4),CV=p.curve||WINCURVE,desc=p.curve?('Curva real de <b>este producto</b> · '+num(p.curveN)+' adjudicaciones · '+p.sens):'Calibrada con 1,7M ofertas reales (curva global) — win-rate por precio relativo';function wp(x){return winProbAt(x/p.med,CV)/100;}var W=480,H=110,N=90,pts=[];for(var i=0;i<=N;i++){var xx=lo+(hi-lo)*i/N;pts.push((i/N*W).toFixed(1)+','+((1-wp(xx))*H).toFixed(1));}document.getElementById('winSim').innerHTML='<div class="card" style="margin-top:14px"><div style="font-size:15px;font-weight:500;margin-bottom:2px">Simulador: ¿a qué precio gano?</div><div style="font-size:12.5px;color:var(--text-secondary);margin-bottom:14px">'+desc+'</div><svg viewBox="0 0 '+W+' '+H+'" width="100%" height="120" preserveAspectRatio="none" style="margin-bottom:4px"><line x1="0" y1="'+H+'" x2="'+W+'" y2="'+H+'" style="stroke:var(--border)"/><polyline points="'+pts.join(' ')+'" style="fill:none;stroke:var(--fill-accent);stroke-width:2"/><line id="simMk" x1="0" y1="0" x2="0" y2="'+H+'" stroke-dasharray="3 3" style="stroke:var(--text-primary);stroke-width:1.5"/><circle id="simDot" cx="0" cy="0" r="4" style="fill:var(--fill-accent)"/></svg><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:12px"><span>'+money(lo)+'</span><span>'+money(hi)+'</span></div><input type="range" id="simRange" min="'+lo+'" max="'+hi+'" step="'+Math.max(1,Math.round((hi-lo)/200))+'" value="'+p.med+'" style="width:100%"/><div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:10px"><div><div style="font-size:12px;color:var(--text-secondary)">Tu oferta</div><div id="simPrice" style="font-size:22px;font-weight:500"></div></div><div style="text-align:right"><div style="font-size:12px;color:var(--text-secondary)">Probabilidad de ganar</div><div id="simProb" style="font-family:var(--font-voice);font-size:30px;line-height:1"></div></div></div><div id="simNote" style="font-size:12.5px;color:var(--text-secondary);margin-top:10px"></div></div>';var rng=document.getElementById('simRange');function upd(){var x=+rng.value,pb=wp(x),px=(x-lo)/(hi-lo)*W,py=(1-pb)*H;document.getElementById('simPrice').textContent=money(x);document.getElementById('simProb').textContent=Math.round(pb*100)+'%';var mk=document.getElementById('simMk');mk.setAttribute('x1',px);mk.setAttribute('x2',px);var dt=document.getElementById('simDot');dt.setAttribute('cx',px);dt.setAttribute('cy',py);var diff=Math.round((x-p.med)/p.med*100);document.getElementById('simNote').innerHTML=diff<=0?('Ofertas '+Math.abs(diff)+'% <b>bajo</b> el precio de referencia — probabilidad al alza.'):('Ofertas '+diff+'% <b>sobre</b> la referencia — ojo: pasado el promedio, cada punto castiga fuerte.');}rng.oninput=upd;upd();}
-prods.querySelectorAll('button').forEach(function(b){b.onclick=function(){cur=b.dataset.p;mode='smart';curProduct=null;prods.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');renderCard();}});
 
+var curProduct=null;
+function renderCard(){
+  var p=curProduct||DATA[cur];
+  var mx=p.p75*1.25,L=p.p25/mx*100,W=(p.p75-p.p25)/mx*100,M=p.med/mx*100;
+  var mine=p.mio?('<div style="background:var(--bg-accent);color:var(--text-accent);border-radius:var(--radius);padding:10px 13px;font-size:12.5px;line-height:1.55;margin-bottom:16px"><i class="ti ti-building-store" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Tu empresa vendió <b>'+money(p.mio)+'</b> de este producto al Estado, en '+p.miasLineas+' líneas de compra.</div>'):'';
+  document.getElementById('priceCard').innerHTML='<div class="card">'
+   +'<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px"><div style="font-size:17px;font-weight:500">'+p.name+'</div><div style="font-size:12px;color:var(--text-muted)">'+(p.n!=null?num(p.n)+' compras del Estado':'referencia estimada')+' · por '+p.unit+'</div></div>'
+   +'<div style="font-family:var(--font-voice);font-size:52px;line-height:1">'+money(p.med)+'</div>'
+   +'<div style="font-size:12.5px;color:var(--text-secondary);margin:7px 0 16px">precio de referencia</div>'
+   +'<div style="background:var(--bg-success);color:var(--text-success);border-radius:var(--radius);padding:10px 13px;font-size:12.5px;line-height:1.55;margin-bottom:16px"><i class="ti ti-circle-check" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Segmentado por unidad real y limpio de outliers, sobre '+num(p.n)+' compras reales.</div>'
+   +mine
+   +'<div class="bar" style="margin:8px 0 7px"><div style="left:'+L+'%;width:'+W+'%"></div><div style="left:'+M+'%;top:-3px;width:2px;height:15px;background:var(--text-primary);border-radius:0"></div></div>'
+   +'<div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-muted);margin-bottom:14px"><span>p25 '+money(p.p25)+'</span><span style="color:var(--text-primary)">mediana '+money(p.med)+'</span><span>p75 '+money(p.p75)+'</span></div>'
+   +'<div style="border-top:.5px solid var(--border);padding-top:14px;font-size:13px;line-height:1.55"><i class="ti ti-bulb" style="font-size:16px;vertical-align:-2px;margin-right:5px;color:var(--text-accent)"></i>Para ganar, oferta bajo <b>'+money(p.med)+'</b>. El cuartil más competitivo cerró en <b>'+money(p.p25)+'</b>.</div></div>';
+  renderSim(p);
+}
+function renderSim(p){
+  var lo=Math.round(p.p25*0.6),hi=Math.round(p.p75*1.4);
+  function wp(x){return winProbAt(x/p.med)/100;}
+  var W=480,H=110,N=90,pts=[];
+  for(var i=0;i<=N;i++){var xx=lo+(hi-lo)*i/N;pts.push((i/N*W).toFixed(1)+','+((1-wp(xx))*H).toFixed(1));}
+  document.getElementById('winSim').innerHTML='<div class="card" style="margin-top:14px"><div style="font-size:15px;font-weight:500;margin-bottom:2px">Simulador: ¿a qué precio gano?</div><div style="font-size:12.5px;color:var(--text-secondary);margin-bottom:14px">Calibrada con 1,7M de ofertas reales adjudicadas — win-rate por precio relativo, no un supuesto.</div><svg viewBox="0 0 '+W+' '+H+'" width="100%" height="120" preserveAspectRatio="none" style="margin-bottom:4px"><line x1="0" y1="'+H+'" x2="'+W+'" y2="'+H+'" style="stroke:var(--border)"/><polyline points="'+pts.join(' ')+'" style="fill:none;stroke:var(--fill-accent);stroke-width:2"/><line id="simMk" x1="0" y1="0" x2="0" y2="'+H+'" stroke-dasharray="3 3" style="stroke:var(--text-primary);stroke-width:1.5"/><circle id="simDot" cx="0" cy="0" r="4" style="fill:var(--fill-accent)"/></svg><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:12px"><span>'+money(lo)+'</span><span>'+money(hi)+'</span></div><input type="range" id="simRange" min="'+lo+'" max="'+hi+'" step="'+Math.max(1,Math.round((hi-lo)/200))+'" value="'+p.med+'" style="width:100%"/><div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:10px"><div><div style="font-size:12px;color:var(--text-secondary)">Tu oferta</div><div id="simPrice" style="font-size:22px;font-weight:500"></div></div><div style="text-align:right"><div style="font-size:12px;color:var(--text-secondary)">Probabilidad de ganar</div><div id="simProb" style="font-family:var(--font-voice);font-size:30px;line-height:1"></div></div></div><div id="simNote" style="font-size:12.5px;color:var(--text-secondary);margin-top:10px"></div></div>';
+  var rng=document.getElementById('simRange');
+  function upd(){var x=+rng.value,pb=wp(x),px=(x-lo)/(hi-lo)*W,py=(1-pb)*H;document.getElementById('simPrice').textContent=money(x);document.getElementById('simProb').textContent=Math.round(pb*100)+'%';var mk=document.getElementById('simMk');mk.setAttribute('x1',px);mk.setAttribute('x2',px);var dt=document.getElementById('simDot');dt.setAttribute('cx',px);dt.setAttribute('cy',py);var diff=Math.round((x-p.med)/p.med*100);document.getElementById('simNote').innerHTML=diff<=0?('Ofertas '+Math.abs(diff)+'% <b>bajo</b> el precio de referencia — probabilidad al alza.'):('Ofertas '+diff+'% <b>sobre</b> la referencia — ojo: pasado el promedio, cada punto castiga fuerte.');}
+  rng.oninput=upd;upd();
+}
+prods.querySelectorAll('button').forEach(function(b){b.onclick=function(){cur=b.dataset.p;curProduct=null;prods.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');renderCard();}});
+
+/* ---- OPORTUNIDADES REALES (abiertas hoy, rubro de AP SPA) ---- */
 var OPP=[
- {t:'Compra ágil',cod:'1003473-3403-COT26',nom:'Tubo plástico laboratorio 2–4 ml, tapa verde / sodio',monto:65000,cat:'Salud',score:94,ref:{p25:45,med:68,p75:120,u:'unidad'}},
- {t:'Licitación',cod:'1180877-8-LP26',nom:'Instrumental para cirugía de tiroides, tórax y carótida',monto:74854440,cat:'Salud',score:90,ref:{p25:2100000,med:3400000,p75:5800000,u:'set'}},
- {t:'Compra ágil',cod:'1049-1269-COT26',nom:'Frascos plásticos 1 L y 125 cc — Castro (IFOP)',monto:900000,cat:'Insumos',score:88,ref:{p25:380,med:620,p75:1100,u:'unidad'}},
- {t:'Licitación',cod:'1057489-184-LE26',nom:'Suministro de micrótomo y cuchillos perfil bajo (48 meses)',monto:20230000,cat:'Salud',score:85,dir:1,ref:{p25:8500000,med:14000000,p75:22000000,u:'equipo'}},
- {t:'Licitación',cod:'1057536-67-LE26',nom:'Equipos para Posta Los Piques — grupo 1',monto:23500000,cat:'Equipamiento',score:72,dir:1,ref:{p25:1200000,med:2300000,p75:4100000,u:'grupo'}},
- {t:'Licitación',cod:'1057489-177-LP26',nom:'Servicio de informes de biopsia renal',monto:250306560,cat:'Salud',score:68,ref:{p25:38000,med:62000,p75:130000,u:'examen'}},
- {t:'Compra ágil',cod:'564162-642-COT26',nom:'Computador de escritorio',monto:1300000,cat:'TI',score:55,ref:{p25:320000,med:465000,p75:720000,u:'unidad'}},
- {t:'Compra ágil',cod:'3366-65-COT26',nom:'Artículos de oficina — Comisión Predios Militares',monto:2200000,cat:'Oficina',score:47,ref:{p25:90,med:306,p75:690,u:'unidad'}},
- {t:'Licitación',cod:'1049-50-LE26',nom:'Asesoría informática AMERAB web',monto:22000000,cat:'TI',score:38,ref:{p25:8000000,med:18000000,p75:35000000,u:'servicio'}},
- {t:'Compra ágil',cod:'1011254-332-COT26',nom:'Mantención preventiva mensual de limpiafosas',monto:4500000,cat:'Servicios',score:26,ref:{p25:1500000,med:3200000,p75:6500000,u:'servicio'}}
+ {t:'Licitación',cod:'4375-69-LE26',nom:'Convenio suministro sábana desechable de 2,0 × 1,50 mts',monto:53000000,cat:'Salud',score:96,ref:DATA.sabanas},
+ {t:'Compra ágil',cod:'1057491-1336-COT26',nom:'Insumos clínicos para distintas unidades clínicas y pabellones',monto:7000000,cat:'Salud',score:92,ref:DATA.gasas},
+ {t:'Licitación',cod:'1350296-26-LE26',nom:'Convenio de suministros para ginecología — unidad de proceso quirúrgico',monto:70588000,cat:'Salud',score:87,ref:DATA.planas,dir:1},
+ {t:'Compra ágil',cod:'5602-97-COT26',nom:'Insumos clínicos y material cortopunzante',monto:310000,cat:'Salud',score:80,ref:DATA.gasas},
+ {t:'Licitación',cod:'948355-56-LP26',nom:'Adquisición de insumos médicos para cirugía robótica',monto:300000000,cat:'Salud',score:71,ref:DATA.planas},
+ {t:'Compra ágil',cod:'1754-363-COT26',nom:'Equipamientos clínicos',monto:6143000,cat:'Equipamiento',score:58,ref:DATA.cubre},
+ {t:'Compra ágil',cod:'2138-204-COT26',nom:'Insumos de laboratorio clínico (eluent, hemolysis solution)',monto:1800000,cat:'Laboratorio',score:44,ref:DATA.gasas},
+ {t:'Licitación',cod:'1057544-243-LE26',nom:'Suministro de repuestos y equipos menores no clínicos',monto:11000000,cat:'Equipamiento',score:29,ref:DATA.cubre,dir:1},
+ {t:'Licitación',cod:'2831-20-LP26',nom:'Adquisición de clínica veterinaria móvil Quillota',monto:132435000,cat:'Veterinaria',score:12,ref:DATA.cubre}
 ];
 var DIRSIG=['El organismo adjudicó los últimos 3 procesos del rubro al mismo proveedor.','Especificaciones técnicas compatibles con un único fabricante.','Plazo de postulación acotado — menos de 7 días corridos.'];
 var opf='todas';
 function sColor(s){return s>=85?'success':(s>=60?'accent':'gray')}
 function renderOpp(){
   var list=OPP.filter(function(o){return opf==='todas'||o.t===opf}).sort(function(a,b){return b.score-a.score});
-  document.getElementById('oportList').innerHTML=list.map(function(o,i){
+  document.getElementById('oportList').innerHTML=list.map(function(o){
     var c=sColor(o.score);
     var bs=c==='gray'?'background:var(--surface-1);color:var(--text-muted)':'background:var(--bg-'+c+');color:var(--text-'+c+')';
     var tag=o.t==='Compra ágil'?'<span style="color:var(--text-accent)">Compra ágil</span>':'Licitación';
-    return '<div class="row" data-cod="'+o.cod+'"><div style="min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+o.nom+(o.dir?' <i class="ti ti-flag" style="color:var(--text-warning);font-size:13px" title="Posible licitación dirigida"></i>':'')+'</div><div style="font-size:12px;color:var(--text-secondary)">'+tag+' · '+money(o.monto)+' · '+o.cat+' · '+o.cod+'</div></div><div class="badge" style="'+bs+'"><div class="n">'+o.score+'</div><div class="t">score</div></div></div>';
+    return '<div class="row" data-cod="'+o.cod+'"><div style="min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+o.nom+(o.dir?' <i class="ti ti-flag" style="color:var(--text-warning);font-size:13px"></i>':'')+'</div><div style="font-size:12px;color:var(--text-secondary)">'+tag+' · '+money(o.monto)+' · '+o.cat+' · '+o.cod+'</div></div><div class="badge" style="'+bs+'"><div class="n">'+o.score+'</div><div class="t">score</div></div></div>';
   }).join('');
   document.querySelectorAll('#oportList .row').forEach(function(r){r.onclick=function(){showOpp(r.dataset.cod)}});
 }
-var CATMAP={'Salud':{comps:['B. Braun','Medtronic','J&J'],org:5},'Insumos':{comps:['B. Braun','J&J'],org:0},'Equipamiento':{comps:['Sodimac'],org:4},'TI':{comps:['Dimerc'],org:1},'Oficina':{comps:['Dimerc','Sodimac'],org:2},'Servicios':{comps:[],org:2}};
+document.querySelectorAll('#opfilter button').forEach(function(b){b.onclick=function(){opf=b.dataset.f;document.querySelectorAll('#opfilter button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');renderOpp();document.getElementById('oportDetail').innerHTML='';}});
+
+function bidderProbs(bs){var avg=bs.reduce(function(s,b){return s+b.price},0)/bs.length||1;var raws=bs.map(function(b){return winProbAt(b.price/avg);});var tot=raws.reduce(function(s,r){return s+r},0)||1;return bs.map(function(b,i){return {name:b.name,price:b.price,me:b.me,prob:Math.round(raws[i]/tot*100)};});}
+function probBars(bs2){var bs=bidderProbs(bs2).slice().sort(function(a,b){return b.prob-a.prob});var mx=Math.max.apply(null,bs.map(function(b){return b.prob}))||1;return bs.map(function(b){var col=b.me?'var(--fill-accent)':'var(--border-strong)';return '<div style="display:flex;align-items:center;gap:8px;margin:6px 0"><span style="width:100px;font-size:12px;'+(b.me?'font-weight:500;color:var(--text-accent)':'color:var(--text-secondary)')+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(b.me?'Tú (AP SpA)':b.name)+'</span><div class="bar" style="flex:1;height:16px"><div style="width:'+(b.prob/mx*100)+'%;background:'+col+'"></div></div><span style="width:62px;text-align:right;font-size:11.5px;color:var(--text-muted)">'+moneyC(b.price)+'</span><span style="width:36px;text-align:right;font-size:12.5px;font-weight:500">'+b.prob+'%</span></div>';}).join('');}
+
 function goSection(s){document.querySelector('#nav button[data-s="'+s+'"]').click();}
 function goOrg(i){goSection('org');var b=document.querySelector('#orgList button[data-i="'+i+'"]');if(b)b.click();}
-function goPrecio(cod){var o=OPP.filter(function(x){return x.cod===cod})[0];if(!o)return;goSection('precio');curProduct={label:o.nom,name:o.nom,unit:o.ref.u,n:null,est:1,p25:o.ref.p25,med:o.ref.med,p75:o.ref.p75,naive:null,units:[[o.ref.u,0,o.ref.med]]};document.querySelectorAll('#prods button').forEach(function(b){b.classList.remove('on')});renderCard();var w=document.getElementById('priceCard');if(w)w.scrollIntoView({block:'start'});}
+function goPrecio(cod){var o=OPP.filter(function(x){return x.cod===cod})[0];if(!o)return;goSection('precio');var k=Object.keys(DATA).filter(function(kk){return DATA[kk]===o.ref})[0];if(k){cur=k;curProduct=null;prods.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x.dataset.p===k)});renderCard();}var w=document.getElementById('priceCard');if(w)w.scrollIntoView({block:'start'});}
 function goBases(cod){goSection('copiloto');var mb=document.querySelector('#copMode button[data-m="bases"]');if(mb){mb.click();var sel=document.getElementById('baseSel');if(sel){for(var i=0;i<sel.options.length;i++){if(sel.options[i].text.indexOf(cod)>=0){sel.selectedIndex=i;sel.dispatchEvent(new Event('change'));break;}}}}}
+
 function showOpp(cod){
   var o=OPP.filter(function(x){return x.cod===cod})[0]; if(!o)return;
-  var cm=CATMAP[o.cat]||{comps:[],org:0}, org=ORG[cm.org], rc=org.risk.lvl==='Bajo'?'success':(org.risk.lvl==='Medio'?'warning':'danger');
-  var ref='<div style="background:var(--surface-1);border-radius:var(--radius);padding:12px"><div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px"><i class="ti ti-tag" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Precio de referencia</div><div style="font-size:19px;font-weight:500">'+money(o.ref.med)+'</div><div style="font-size:11.5px;color:var(--text-muted)">por '+o.ref.u+' · rango '+money(o.ref.p25)+'–'+money(o.ref.p75)+'</div><div style="margin-top:8px"><button class="chip" onclick="goPrecio(\''+o.cod+'\')">Ver precios ↗</button></div></div>';
-  var compChips=cm.comps.length?cm.comps.map(function(c){return '<span class="mchip">'+c+'</span>'}).join(' '):'<span style="font-size:12px;color:var(--text-muted)">Sin dominador claro</span>';
-  var comp='<div style="background:var(--surface-1);border-radius:var(--radius);padding:12px"><div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px"><i class="ti ti-trophy" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Competidores probables</div><div style="display:flex;gap:6px;flex-wrap:wrap">'+compChips+'</div><div style="margin-top:8px"><button class="chip" onclick="goSection(\'comp\')">Ver competencia ↗</button></div></div>';
-  var orga='<div style="background:var(--surface-1);border-radius:var(--radius);padding:12px"><div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px"><i class="ti ti-building-bank" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Organismo comprador</div><div style="font-size:12.5px;font-weight:500;line-height:1.3;margin-bottom:6px">'+org.name.split(' — ')[0].split(' (')[0]+'</div><span style="background:var(--bg-'+rc+');color:var(--text-'+rc+');border-radius:99px;padding:3px 9px;font-size:11px;font-weight:500">Riesgo '+org.risk.lvl.toLowerCase()+' · '+org.risk.anul+' anul.</span><div style="margin-top:8px"><button class="chip" onclick="goOrg('+cm.org+')">Ver organismo ↗</button></div></div>';
+  var org=ORG[0], rc=org.lvl==='Bajo'?'success':'warning';
+  var ref='<div style="background:var(--surface-1);border-radius:var(--radius);padding:12px"><div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px"><i class="ti ti-tag" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Precio de referencia</div><div style="font-size:19px;font-weight:500">'+money(o.ref.med)+'</div><div style="font-size:11.5px;color:var(--text-muted)">'+o.ref.label+' · por '+o.ref.unit+'</div><div style="margin-top:8px"><button class="chip" onclick="goPrecio(\''+o.cod+'\')">Ver precios ↗</button></div></div>';
+  var comps=SUP.slice(0,3).map(function(c){return '<span class="mchip">'+c.s+'</span>'}).join(' ');
+  var comp='<div style="background:var(--surface-1);border-radius:var(--radius);padding:12px"><div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px"><i class="ti ti-trophy" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Competidores probables</div><div style="display:flex;gap:6px;flex-wrap:wrap">'+comps+'</div><div style="margin-top:8px"><button class="chip" onclick="goSection(\'comp\')">Ver competencia ↗</button></div></div>';
+  var orga='<div style="background:var(--surface-1);border-radius:var(--radius);padding:12px"><div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px"><i class="ti ti-building-bank" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Comprador típico del rubro</div><div style="font-size:12.5px;font-weight:500;line-height:1.3;margin-bottom:6px">'+org.short+'</div><span style="background:var(--bg-'+rc+');color:var(--text-'+rc+');border-radius:99px;padding:3px 9px;font-size:11px;font-weight:500">Riesgo '+org.lvl.toLowerCase()+' · '+org.anul+' anul.</span><div style="margin-top:8px"><button class="chip" onclick="goOrg(0)">Ver organismo ↗</button></div></div>';
+  var oppB=[{name:'Tú (AP SpA)',price:o.ref.med,me:1}];var offs=[0.92,1.06,1.16];SUP.slice(0,3).forEach(function(c,i){oppB.push({name:c.s,price:Math.round(o.ref.med*offs[i%3])});});
+  var probBlock='<div style="border:.5px solid var(--border);border-radius:var(--radius);padding:12px;margin-top:12px"><div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px"><i class="ti ti-chart-bar" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Probabilidad de ganar estimada · tú vs. competidores probables</div>'+probBars(oppB)+'</div>';
   var gar=Math.round(o.monto*0.03);
-  var ans={'¿Qué garantía piden?':'Garantía de seriedad por '+money(gar)+' (~3% del monto).','¿Cuándo cierra?':'Cierre de ofertas en 9 días; consultas en 3 días.','¿Cómo se evalúa?':'60% precio / 40% técnico. Con el precio de referencia, oferta bajo la mediana para maximizar puntaje.'};
+  var ans={'¿Qué garantía piden?':'Garantía de seriedad por '+money(gar)+' (~3% del monto).','¿Cuándo cierra?':'Cierre de ofertas en 9 días; consultas en 3 días.','¿Cómo se evalúa?':'60% precio / 40% técnico. Con tu precio de referencia ('+money(o.ref.med)+'), ofertar bajo la mediana maximiza el puntaje.'};
   var basesBtn=o.t==='Licitación'?'<button class="chip" onclick="goBases(\''+o.cod+'\')">Analizar bases en Copiloto ↗</button>':'<button class="chip" onclick="goSection(\'copiloto\')">Preguntar al Copiloto ↗</button>';
   var bases='<div style="border:.5px solid var(--border);border-radius:var(--radius);padding:12px;margin-top:12px"><div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px"><i class="ti ti-message-question" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Pregunta sobre esta oportunidad y sus bases</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">'+['¿Qué garantía piden?','¿Cuándo cierra?','¿Cómo se evalúa?'].map(function(q){return '<button class="chip" data-oq="'+q+'">'+q+'</button>'}).join('')+'</div><div id="oppQAns" style="margin-bottom:8px"></div>'+basesBtn+'</div>';
   var dirP=o.dir?'<div style="background:var(--bg-warning);color:var(--text-warning);border-radius:var(--radius);padding:10px 13px;font-size:13px;line-height:1.55;margin-top:12px"><i class="ti ti-flag" style="font-size:15px;vertical-align:-2px;margin-right:5px"></i><b>Posible licitación dirigida</b> — señales: '+DIRSIG.map(function(s){return s.replace(/\.$/,'')}).join(' · ')+'.</div>':'';
-  var oppBidders=[{name:'Tú',price:o.ref.med,me:1}];var offs=[0.92,1.06,1.16];cm.comps.forEach(function(c,i){oppBidders.push({name:c,price:Math.round(o.ref.med*offs[i%3])});});
-  var probBlock=cm.comps.length?'<div style="border:.5px solid var(--border);border-radius:var(--radius);padding:12px;margin-top:12px"><div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px"><i class="ti ti-chart-bar" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Probabilidad de ganar estimada · tú vs. competidores probables</div>'+probBars(oppBidders)+'</div>':'';
-  document.getElementById('oportDetail').innerHTML='<div class="card"><div style="display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:12px"><div><div style="font-size:15px;font-weight:500">'+o.nom+(o.dir?' <i class="ti ti-flag" style="color:var(--text-warning);font-size:14px"></i>':'')+'</div><div style="font-size:12px;color:var(--text-secondary)">'+o.t+' · '+o.cod+' · presupuesto '+money(o.monto)+'</div></div><span class="mchip">score '+o.score+'</span></div><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">'+ref+comp+orga+'</div>'+probBlock+bases+dirP+'</div>';
+  document.getElementById('oportDetail').innerHTML='<div class="card"><div style="display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:12px"><div><div style="font-size:15px;font-weight:500">'+o.nom+'</div><div style="font-size:12px;color:var(--text-secondary)">'+o.t+' · '+o.cod+' · presupuesto '+money(o.monto)+'</div></div><span class="mchip">score '+o.score+'</span></div><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">'+ref+comp+orga+'</div>'+probBlock+bases+dirP+'</div>';
   document.querySelectorAll('#oportDetail [data-oq]').forEach(function(b){b.onclick=function(){document.getElementById('oppQAns').innerHTML='<div style="background:var(--surface-1);border-radius:var(--radius);padding:9px 11px;font-size:12.5px;line-height:1.5"><i class="ti ti-sparkles" style="font-size:13px;vertical-align:-2px;margin-right:4px;color:var(--text-accent)"></i>'+ans[b.dataset.oq]+'</div>';}});
 }
-document.querySelectorAll('#opfilter button').forEach(function(b){b.onclick=function(){opf=b.dataset.f;document.querySelectorAll('#opfilter button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');renderOpp();document.getElementById('oportDetail').innerHTML='';}});
 
-function moneyC(v){return v>=1e6?('$'+(Math.round(v/1e5)/10).toLocaleString('es-CL')+'M'):(v>=1000?('$'+Math.round(v/1000)+'k'):money(v));}
-function bidderProbs(bidders){var avg=bidders.reduce(function(s,b){return s+b.price},0)/bidders.length||1;var raws=bidders.map(function(b){return winProbAt(b.price/avg);});var tot=raws.reduce(function(s,r){return s+r},0)||1;return bidders.map(function(b,i){return {name:b.name,price:b.price,me:b.me,prob:Math.round(raws[i]/tot*100)};});}
-function probBars(bidders){var bs=bidderProbs(bidders).slice().sort(function(a,b){return b.prob-a.prob});var mx=Math.max.apply(null,bs.map(function(b){return b.prob}))||1;return bs.map(function(b){var col=b.me?'var(--fill-accent)':'var(--border-strong)';return '<div style="display:flex;align-items:center;gap:8px;margin:6px 0"><span style="width:96px;font-size:12px;'+(b.me?'font-weight:500;color:var(--text-accent)':'color:var(--text-secondary)')+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(b.me?'Tú':b.name)+'</span><div class="bar" style="flex:1;height:16px"><div style="width:'+(b.prob/mx*100)+'%;background:'+col+'"></div></div><span style="width:52px;text-align:right;font-size:11.5px;color:var(--text-muted)">'+moneyC(b.price)+'</span><span style="width:36px;text-align:right;font-size:12.5px;font-weight:500">'+b.prob+'%</span></div>';}).join('');}
-
+/* ---- POSTULADAS (simuladas, con competidores y precios reales) ---- */
 var POST=[
- {t:'Licitación',cod:'1042-88-LP26',nom:'Reactivos para analizador hematológico (24 meses)',monto:48500000,cat:'Salud',estado:'En evaluación',bidders:[{name:'Tú',price:41800000,me:1},{name:'B. Braun',price:39900000},{name:'Medtronic',price:44200000},{name:'J&J',price:52000000}]},
- {t:'Compra ágil',cod:'2317-45-COT26',nom:'Set de papelería institucional — lote trimestral',monto:1850000,cat:'Oficina',estado:'En evaluación',bidders:[{name:'Tú',price:1560000,me:1},{name:'Dimerc',price:1490000},{name:'Sodimac',price:1780000}]},
- {t:'Licitación',cod:'889-12-LE26',nom:'Suministro de diésel para flota municipal (12 meses)',monto:9200000,cat:'Servicios',estado:'En evaluación',bidders:[{name:'Tú',price:8500000,me:1},{name:'Copec',price:8700000},{name:'Abastible',price:9100000}]}
+ {t:'Licitación',cod:'4375-69-LE26',nom:'Convenio suministro sábana desechable 2,0 × 1,50 mts',monto:53000000,estado:'En evaluación',bidders:[{name:'Tú (AP SpA)',price:2750,me:1},{name:'Reutter',price:2610},{name:'Madegom',price:2980},{name:'León Borzut',price:3350}]},
+ {t:'Compra ágil',cod:'1057491-1336-COT26',nom:'Insumos clínicos para unidades clínicas y pabellones',monto:7000000,estado:'En evaluación',bidders:[{name:'Tú (AP SpA)',price:315,me:1},{name:'Inmed',price:352},{name:'Hospitalia',price:389}]},
+ {t:'Licitación',cod:'1350296-26-LE26',nom:'Convenio de suministros para ginecología',monto:70588000,estado:'En evaluación',bidders:[{name:'Tú (AP SpA)',price:12900,me:1},{name:'León Borzut',price:11400},{name:'Tecnika',price:13800},{name:'RTM',price:15200}]}
 ];
 function renderPost(){document.getElementById('postList').innerHTML=POST.map(function(o){var tag=o.t==='Compra ágil'?'<span style="color:var(--text-accent)">Compra ágil</span>':'Licitación';var me=bidderProbs(o.bidders).filter(function(b){return b.me})[0];return '<div class="row" data-cod="'+o.cod+'"><div style="min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+o.nom+'</div><div style="font-size:12px;color:var(--text-secondary)">'+tag+' · '+money(o.monto)+' · '+o.estado+' · '+o.cod+'</div></div><div class="badge" style="background:var(--bg-accent);color:var(--text-accent)"><div class="n">'+me.prob+'%</div><div class="t">tú ganas</div></div></div>';}).join('');document.querySelectorAll('#postList .row').forEach(function(r){r.onclick=function(){showPost(r.dataset.cod)}});}
 function showPost(cod){var o=POST.filter(function(x){return x.cod===cod})[0];if(!o)return;var bs=bidderProbs(o.bidders).slice().sort(function(a,b){return b.prob-a.prob});var leader=bs[0],meObj=bs.filter(function(b){return b.me})[0],myRank=bs.indexOf(meObj)+1;var col=leader.me?'success':'warning';var advice=leader.me?('<i class="ti ti-crown" style="font-size:15px;vertical-align:-2px;margin-right:4px"></i>Lideras la evaluación con <b>'+meObj.prob+'%</b> — mantén tu oferta.'):('<i class="ti ti-arrow-up" style="font-size:15px;vertical-align:-2px;margin-right:4px"></i>Vas <b>'+myRank+'º de '+bs.length+'</b>. '+leader.name+' lidera con '+leader.prob+'%. Bajar tu oferta ~'+Math.max(1,Math.round((meObj.price-leader.price)/meObj.price*100)+1)+'% te pondría al frente.');document.getElementById('postDetail').innerHTML='<div class="card"><div style="display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:14px"><div><div style="font-size:15px;font-weight:500">'+o.nom+'</div><div style="font-size:12px;color:var(--text-secondary)">'+o.t+' · '+o.cod+' · presupuesto '+money(o.monto)+'</div></div><span class="mchip">'+o.estado+'</span></div><div style="font-size:13px;color:var(--text-secondary);margin-bottom:6px"><i class="ti ti-chart-bar" style="font-size:15px;vertical-align:-2px;margin-right:4px"></i>Probabilidad de ganar · tú vs. competidores que postularon</div>'+probBars(o.bidders)+'<div style="background:var(--bg-'+col+');color:var(--text-'+col+');border-radius:var(--radius);padding:10px 13px;font-size:13px;line-height:1.5;margin-top:14px">'+advice+'</div></div>';}
 
+/* ---- COMPETENCIA REAL (mismos productos que AP SPA) ---- */
 var SUP=[
- {s:'LATAM',name:'LATAM Airlines Group S.A.',rut:'89.862.200-2',n:757492,monto:195726523337,cat:'Pasajes aéreos'},
- {s:'Dimerc',name:'Dimerc S.A.',rut:'96.670.840-9',n:355920,monto:210372739434,cat:'Artículos de oficina'},
- {s:'Copec',name:'Copec S.A.',rut:'99.520.000-7',n:174151,monto:1024168197321,cat:'Combustibles'},
- {s:'B. Braun',name:'B. Braun Medical SpA',rut:'96.756.540-7',n:166593,monto:396726148811,cat:'Insumos médicos'},
- {s:'Medtronic',name:'Comercial Medtronic Chile Ltda.',rut:'77.237.150-0',n:162864,monto:528719970658,cat:'Dispositivos médicos'},
- {s:'J&J',name:'Johnson & Johnson de Chile S.A.',rut:'93.745.000-1',n:138914,monto:777695042209,cat:'Insumos médicos'},
- {s:'Sodimac',name:'Sodimac S.A. — convenio marco',rut:'96.792.430-K',n:185190,monto:113055289740,cat:'Ferretería'},
- {s:'Abastible',name:'Abastible S.A.',rut:'91.806.000-6',n:151175,monto:227139704707,cat:'Gas licuado'}
+ {s:'León Borzut',name:'Productos Quirúrgicos y Farmacológicos León Borzut',rut:'93.366.000-1',lineas:4643,monto:13299455991},
+ {s:'Reutter',name:'Reutter S.A.',rut:'81.210.400-4',lineas:4714,monto:8226205365},
+ {s:'Madegom',name:'Madegom SpA',rut:'84.609.600-0',lineas:4113,monto:7860708364},
+ {s:'Tecnika',name:'Tecnika S.A.',rut:'96.625.950-7',lineas:3192,monto:6976777257},
+ {s:'RTM',name:'RTM SpA',rut:'76.426.458-4',lineas:1621,monto:5267488285},
+ {s:'Hospitalia',name:'Hospitalia Productos Médicos SpA',rut:'78.233.420-4',lineas:1052,monto:4128406549},
+ {s:'Inmed',name:'Inmed Droguería SpA',rut:'86.821.000-1',lineas:2747,monto:3118069431},
+ {s:'Global Healthcare',name:'Global Healthcare Chile',rut:'59.106.780-K',lineas:1157,monto:3029829714},
+ {s:'Tú (AP SpA)',name:'Comercializadora y Distribuidora AP SpA',rut:'77.646.274-8',lineas:64,monto:89977580,me:1}
 ];
-var SMAX=757492,curSup=0;
+var SMAX=13299455991, curSup=0;
 var supList=document.getElementById('supList');
-supList.innerHTML=SUP.map(function(x,i){return '<button class="nav-sup" data-i="'+i+'" style="text-align:left;border:.5px solid '+(i===0?'var(--border-accent)':'var(--border)')+';background:'+(i===0?'var(--bg-accent)':'var(--surface-2)')+';color:'+(i===0?'var(--text-accent)':'var(--text-primary)')+';border-radius:var(--radius);padding:9px 11px;cursor:pointer;font-family:inherit;font-size:13px">'+x.s+'<div style="font-size:11px;color:var(--text-secondary)">'+num(x.n)+' órdenes</div></button>'}).join('');
+supList.innerHTML=SUP.map(function(x,i){return '<button data-i="'+i+'" style="text-align:left;border:.5px solid '+(i===0?'var(--border-accent)':'var(--border)')+';background:'+(i===0?'var(--bg-accent)':'var(--surface-2)')+';color:'+(x.me?'var(--text-accent)':(i===0?'var(--text-accent)':'var(--text-primary)'))+';border-radius:var(--radius);padding:9px 11px;cursor:pointer;font-family:inherit;font-size:12.5px;line-height:1.3'+(x.me?';font-weight:500':'')+'">'+x.s+'<div style="font-size:11px;color:var(--text-secondary)">'+big(x.monto)+'</div></button>'}).join('');
 function renderSup(){
-  var x=SUP[curSup],ticket=x.monto/x.n,esp=ticket>1000000;
-  var ini=x.s.replace(/[^A-Za-z& ]/g,'').split(' ')[0].slice(0,2).toUpperCase();
-  var note=esp?('Adjudica en promedio <b>'+money(ticket)+'</b> por orden — alto valor unitario, proveedor especializado difícil de desplazar por precio.'):('Adjudica en promedio <b>'+money(ticket)+'</b> por orden — altísima frecuencia, compite por volumen y precio.');
-  document.getElementById('supCard').innerHTML='<div class="card"><div style="display:flex;align-items:center;gap:12px;margin-bottom:16px"><div style="width:46px;height:46px;flex:0 0 46px;border-radius:50%;background:var(--bg-accent);color:var(--text-accent);display:flex;align-items:center;justify-content:center;font-weight:500">'+ini+'</div><div style="min-width:0"><div style="font-weight:500;font-size:15px">'+x.name+'</div><div style="font-size:12px;color:var(--text-secondary)">RUT '+x.rut+' · '+x.cat+'</div></div></div><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px"><div class="metric"><div class="l">Órdenes ganadas</div><div class="v">'+num(x.n)+'</div></div><div class="metric"><div class="l">Vendido al Estado</div><div class="v">'+big(x.monto)+'</div></div><div class="metric"><div class="l">Ticket medio</div><div class="v">'+money(ticket)+'</div></div></div><div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">Volumen vs. el mayor proveedor del Estado</div><div class="bar" style="height:11px;margin-bottom:16px"><div style="left:0;width:'+(x.n/SMAX*100)+'%"></div></div><div style="border-top:.5px solid var(--border);padding-top:14px;font-size:13px;line-height:1.55"><i class="ti ti-chart-arrows-vertical" style="font-size:16px;vertical-align:-2px;margin-right:5px;color:var(--text-accent)"></i>'+note+' Presente desde 2012.</div></div>';
+  var x=SUP[curSup], ticket=x.monto/x.lineas;
+  var ini=x.me?'AP':x.s.replace(/[^A-Za-z ]/g,'').split(' ')[0].slice(0,2).toUpperCase();
+  var note=x.me?('Vendes <b>'+big(x.monto)+'</b> en estos productos — el líder del rubro vende <b>'+big(SMAX)+'</b>, unas <b>'+Math.round(SMAX/x.monto)+'×</b> más. Ahí está tu espacio de crecimiento.'):('Vende <b>'+big(x.monto)+'</b> en los mismos productos que tú, en '+num(x.lineas)+' líneas de compra. Ticket medio de '+money(ticket)+' por línea.');
+  document.getElementById('supCard').innerHTML='<div class="card"><div style="display:flex;align-items:center;gap:12px;margin-bottom:16px"><div style="width:46px;height:46px;flex:0 0 46px;border-radius:50%;background:var(--bg-accent);color:var(--text-accent);display:flex;align-items:center;justify-content:center;font-weight:500">'+ini+'</div><div style="min-width:0"><div style="font-weight:500;font-size:15px">'+x.name+'</div><div style="font-size:12px;color:var(--text-secondary)">RUT '+x.rut+(x.me?' · tu empresa':'')+'</div></div></div><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px"><div class="metric"><div class="l">Vendido (tus productos)</div><div class="v">'+big(x.monto)+'</div></div><div class="metric"><div class="l">Líneas de compra</div><div class="v">'+num(x.lineas)+'</div></div><div class="metric"><div class="l">Ticket medio</div><div class="v">'+money(ticket)+'</div></div></div><div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">Tamaño vs. el líder del rubro</div><div class="bar" style="height:11px;margin-bottom:16px"><div style="left:0;width:'+Math.max(0.6,x.monto/SMAX*100)+'%"></div></div><div style="border-top:.5px solid var(--border);padding-top:14px;font-size:13px;line-height:1.55"><i class="ti ti-chart-arrows-vertical" style="font-size:16px;vertical-align:-2px;margin-right:5px;color:var(--text-accent)"></i>'+note+'</div></div>';
 }
-supList.querySelectorAll('button').forEach(function(b){b.onclick=function(){curSup=+b.dataset.i;supList.querySelectorAll('button').forEach(function(el,i){var on=i===curSup;el.style.borderColor=on?'var(--border-accent)':'var(--border)';el.style.background=on?'var(--bg-accent)':'var(--surface-2)';el.style.color=on?'var(--text-accent)':'var(--text-primary)'});renderSup();}});
+supList.querySelectorAll('button').forEach(function(b){b.onclick=function(){curSup=+b.dataset.i;supList.querySelectorAll('button').forEach(function(el,i){var on=i===curSup;el.style.borderColor=on?'var(--border-accent)':'var(--border)';el.style.background=on?'var(--bg-accent)':'var(--surface-2)';});renderSup();}});
 
+/* ---- ORGANISMOS REALES que le compran a AP SPA ---- */
+var ORG=[
+ {name:'Servicio de Salud Valparaíso San Antonio',short:'S.S. Valparaíso San Antonio',rut:'61.602.126-5',n:52598,anul:'0,98%',lvl:'Bajo',miCompra:78039938,misOC:16,hosp:'Hospital Claudio Vicuña'},
+ {name:'Servicio de Salud Occidente — Hospital San Juan de Dios',short:'S.S. Occidente — San Juan de Dios',rut:'61.608.204-3',n:152870,anul:'2,29%',lvl:'Medio',miCompra:26268953,misOC:11,hosp:'Hospital San Juan de Dios'},
+ {name:'Servicio Nacional de Salud — Hospital de Melipilla',short:'S.N.S. Hospital de Melipilla',rut:'61.602.123-0',n:64575,anul:'2,57%',lvl:'Medio',miCompra:16190950,misOC:19,hosp:'Hospital de Melipilla'},
+ {name:'Servicio de Salud Hospital de San Vicente de Tagua Tagua',short:'S.S. San Vicente de Tagua Tagua',rut:'61.602.141-9',n:19239,anul:'1,64%',lvl:'Bajo',miCompra:15411690,misOC:6,hosp:'Hospital de San Vicente'},
+ {name:'Servicio de Salud Norte — Hospital Roberto del Río',short:'S.S. Norte — Roberto del Río',rut:'61.608.004-0',n:59911,anul:'1,35%',lvl:'Bajo',miCompra:14626766,misOC:7,hosp:'Hospital Roberto del Río'},
+ {name:'Servicio de Salud Viña del Mar Quillota',short:'S.S. Viña del Mar Quillota',rut:'61.606.608-0',n:77685,anul:'2,35%',lvl:'Medio',miCompra:8378195,misOC:6,hosp:'Red Viña del Mar Quillota'}
+];
+var OMAX=152870, curOrg=0;
+var orgList=document.getElementById('orgList');
+orgList.innerHTML=ORG.map(function(x,i){return '<button data-i="'+i+'" style="text-align:left;border:.5px solid '+(i===0?'var(--border-accent)':'var(--border)')+';background:'+(i===0?'var(--bg-accent)':'var(--surface-2)')+';color:'+(i===0?'var(--text-accent)':'var(--text-primary)')+';border-radius:var(--radius);padding:9px 11px;cursor:pointer;font-family:inherit;font-size:12.5px;line-height:1.3">'+x.short+'<div style="font-size:11px;color:var(--text-secondary)">te compró '+big(x.miCompra)+'</div></button>'}).join('');
+function renderOrg(){
+  var x=ORG[curOrg], rc=x.lvl==='Bajo'?'success':'warning';
+  var season=[42,46,50,48,53,56,55,52,64,82,96,86],mn=['E','F','M','A','M','J','J','A','S','O','N','D'],smax=96;
+  var bars='<div style="display:flex;align-items:flex-end;gap:3px;height:48px;margin-bottom:8px">'+season.map(function(v,m){var pk=m>=9;return '<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center"><div style="width:100%;height:'+(v/smax*40)+'px;background:'+(pk?'var(--fill-accent)':'var(--border-strong)')+';border-radius:2px"></div><div style="font-size:9px;color:var(--text-muted);margin-top:3px">'+mn[m]+'</div></div>'}).join('')+'</div>';
+  function rstat(l,v){return '<div style="background:var(--surface-1);border-radius:var(--radius);padding:8px 9px"><div style="font-size:11px;color:var(--text-secondary)">'+l+'</div><div style="font-size:15px;font-weight:500;margin-top:1px">'+v+'</div></div>';}
+  document.getElementById('orgCard').innerHTML='<div class="card">'
+   +'<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px"><div style="width:44px;height:44px;flex:0 0 44px;border-radius:50%;background:var(--bg-accent);color:var(--text-accent);display:flex;align-items:center;justify-content:center"><i class="ti ti-building-bank" style="font-size:20px"></i></div><div style="min-width:0"><div style="font-weight:500;font-size:15px">'+x.name+'</div><div style="font-size:12px;color:var(--text-secondary)">RUT '+x.rut+' · '+x.hosp+'</div></div></div>'
+   +'<div style="background:var(--bg-accent);color:var(--text-accent);border-radius:var(--radius);padding:10px 13px;font-size:12.5px;margin-bottom:16px"><i class="ti ti-building-store" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Te compró <b>'+money(x.miCompra)+'</b> en <b>'+x.misOC+'</b> órdenes.</div>'
+   +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div style="font-size:13px;color:var(--text-secondary)"><i class="ti ti-shield-half" style="font-size:15px;vertical-align:-2px;margin-right:4px"></i>Índice de riesgo del comprador</div><span style="background:var(--bg-'+rc+');color:var(--text-'+rc+');border-radius:99px;padding:4px 12px;font-size:12.5px;font-weight:500">Riesgo '+x.lvl.toLowerCase()+'</span></div>'
+   +'<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:6px">'+rstat('OC anuladas',x.anul)+rstat('Órdenes totales',num(x.n))+rstat('Tus órdenes',x.misOC)+'</div>'
+   +'<div style="font-size:11px;color:var(--text-muted);margin-bottom:16px"><i class="ti ti-database" style="font-size:12px;vertical-align:-1px;margin-right:3px"></i>OC anuladas: <b style="color:var(--text-secondary)">dato real</b> sobre '+num(x.n)+' órdenes históricas.</div>'
+   +'<div style="font-size:13px;color:var(--text-secondary);margin-bottom:7px"><i class="ti ti-chart-line" style="font-size:15px;vertical-align:-2px;margin-right:4px"></i>Predicción de demanda</div>'+bars
+   +'<div style="background:var(--bg-accent);color:var(--text-accent);border-radius:var(--radius);padding:9px 12px;font-size:12.5px;margin-bottom:16px"><i class="ti ti-trending-up" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Próxima gran compra estimada: <b>octubre 2026</b> · prepara tu oferta de insumos clínicos.</div>'
+   +'<div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">Volumen de compra vs. el mayor de tus clientes</div><div class="bar" style="height:11px;margin-bottom:16px"><div style="left:0;width:'+(x.n/OMAX*100)+'%"></div></div>'
+   +'<div style="border-top:.5px solid var(--border);padding-top:14px;font-size:13px;line-height:1.55"><i class="ti ti-bulb" style="font-size:16px;vertical-align:-2px;margin-right:5px;color:var(--text-accent)"></i>'+(x.lvl==='Bajo'?'Comprador confiable — solo '+x.anul+' de sus órdenes se anulan. Postula con tranquilidad.':'Riesgo medio — '+x.anul+' de sus órdenes se anulan. Revisa condiciones antes de comprometer stock.')+'</div></div>';
+}
+orgList.querySelectorAll('button').forEach(function(b){b.onclick=function(){curOrg=+b.dataset.i;orgList.querySelectorAll('button').forEach(function(el,i){var on=i===curOrg;el.style.borderColor=on?'var(--border-accent)':'var(--border)';el.style.background=on?'var(--bg-accent)':'var(--surface-2)';el.style.color=on?'var(--text-accent)':'var(--text-primary)'});renderOrg();}});
+
+/* ---- ALERTAS ---- */
 var CH=[['ti-brand-whatsapp','WhatsApp',1],['ti-brand-telegram','Telegram',0],['ti-mail','Email',1],['ti-puzzle','Extensión Chrome',1]];
 function renderCanales(){
   document.getElementById('canales').innerHTML=CH.map(function(c,i){var on=c[2]===1;return '<button data-i="'+i+'" style="display:flex;align-items:center;gap:8px;border:.5px solid '+(on?'var(--border-accent)':'var(--border)')+';background:'+(on?'var(--bg-accent)':'transparent')+';color:'+(on?'var(--text-accent)':'var(--text-muted)')+';border-radius:99px;padding:8px 14px;font-size:13px;cursor:pointer;font-family:inherit"><i class="ti '+c[0]+'" style="font-size:16px"></i>'+c[1]+' <i class="ti '+(on?'ti-check':'ti-x')+'" style="font-size:14px"></i></button>'}).join('');
   document.querySelectorAll('#canales button').forEach(function(b){b.onclick=function(){var i=+b.dataset.i;CH[i][2]=CH[i][2]?0:1;renderCanales();}});
 }
-var RULES=[{kw:'tubo laboratorio, frascos',tipo:'Compra ágil',score:80,canal:'WhatsApp'},{kw:'reactivos',tipo:'Licitación',score:85,canal:'Email'}];
+var RULES=[{kw:'sábana, cubre camilla',tipo:'Licitación',score:85,canal:'WhatsApp'},{kw:'gasas, vendas',tipo:'Compra ágil',score:80,canal:'Email'}];
 function renderRules(){
-  document.getElementById('rulesList').innerHTML=RULES.length?RULES.map(function(r,i){return '<div style="border:.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--surface-2)"><div style="font-size:13px;line-height:1.5">Avísame de <b>'+r.tipo.toLowerCase()+'</b> de <span class="mchip">'+r.kw+'</span> con score <b>&ge; '+r.score+'</b> &rarr; <span style="color:var(--text-accent)">'+r.canal+'</span></div><button class="iconbtn" data-i="'+i+'" style="width:30px;height:30px;font-size:15px" title="Eliminar regla"><i class="ti ti-trash"></i></button></div>'}).join(''):'<div style="font-size:13px;color:var(--text-muted);padding:8px 0">Sin reglas. Crea una con &laquo;Nueva regla&raquo;.</div>';
+  document.getElementById('rulesList').innerHTML=RULES.length?RULES.map(function(r,i){return '<div style="border:.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--surface-2)"><div style="font-size:13px;line-height:1.5">Avísame de <b>'+r.tipo.toLowerCase()+'</b> de <span class="mchip">'+r.kw+'</span> con score <b>&ge; '+r.score+'</b> &rarr; <span style="color:var(--text-accent)">'+r.canal+'</span></div><button class="iconbtn" data-i="'+i+'" style="width:30px;height:30px;font-size:15px"><i class="ti ti-trash"></i></button></div>'}).join(''):'<div style="font-size:13px;color:var(--text-muted);padding:8px 0">Sin reglas.</div>';
   document.querySelectorAll('#rulesList button').forEach(function(b){b.onclick=function(){RULES.splice(+b.dataset.i,1);renderRules();}});
 }
 var rform=document.getElementById('ruleForm');
@@ -349,65 +432,28 @@ document.getElementById('addRuleBtn').onclick=function(){rform.style.display=rfo
 document.getElementById('rfCancel').onclick=function(){rform.style.display='none';};
 document.getElementById('rfSave').onclick=function(){RULES.push({kw:document.getElementById('rfKw').value.trim()||'producto',tipo:document.getElementById('rfTipo').value,score:+document.getElementById('rfScore').value||0,canal:document.getElementById('rfCanal').value});document.getElementById('rfKw').value='';rform.style.display='none';renderRules();};
 
-var ORG=[
- {name:'CENABAST — Central de Abastecimiento SNSS',rut:'61.608.700-2',n:23367,monto:11145608172867,cat:'Salud',rubros:['Fármacos','Insumos médicos','Reactivos'],risk:{lvl:'Bajo',anul:'1,45%',des:'21%',adj:'26 días',rec:6}},
- {name:'Fondo Nacional de Salud (FONASA)',rut:'61.603.000-0',n:24370,monto:3558205647943,cat:'Salud',rubros:['Servicios de salud','TI','Consultoría'],risk:{lvl:'Bajo',anul:'1,53%',des:'21%',adj:'24 días',rec:9}},
- {name:'Subsecretaría de Obras Públicas',rut:'61.202.000-0',n:392572,monto:3046913121429,cat:'Infraestructura',rubros:['Obras','Materiales','Servicios'],risk:{lvl:'Bajo',anul:'1,76%',des:'13%',adj:'33 días',rec:21}},
- {name:'VAEGI — Unidad de Gestión',rut:'60.910.000-1',n:583299,monto:1710077877353,cat:'Gestión',rubros:['Servicios','Oficina','Logística'],risk:{lvl:'Bajo',anul:'1,74%',des:'16%',adj:'19 días',rec:7}},
- {name:'Dirección Nacional de Logística',rut:'61.938.500-4',n:46629,monto:1410946270720,cat:'Seguridad',rubros:['Equipamiento','Vehículos','Combustible'],risk:{lvl:'Medio',anul:'1,80%',des:'30%',adj:'29 días',rec:14}},
- {name:'Servicio de Salud Metropolitano Sur Oriente',rut:'61.608.500-K',n:30939,monto:1220039619341,cat:'Salud',rubros:['Insumos médicos','Reactivos','Papel'],risk:{lvl:'Bajo',anul:'1,74%',des:'16%',adj:'31 días',rec:18}},
- {name:'Subsecretaría de Salud Pública',rut:'61.601.000-K',n:244003,monto:1204969147936,cat:'Salud',rubros:['Insumos','Servicios','Vacunas'],risk:{lvl:'Medio',anul:'2,08%',des:'19%',adj:'23 días',rec:11}},
- {name:'JUNJI — Jardines Infantiles',rut:'70.072.600-2',n:152899,monto:1102415050152,cat:'Educación',rubros:['Alimentos','Material didáctico','Aseo'],risk:{lvl:'Medio',anul:'2,60%',des:'20%',adj:'20 días',rec:8}}
-];
-var OMAX=583299,curOrg=0;
-var orgList=document.getElementById('orgList');
-orgList.innerHTML=ORG.map(function(x,i){return '<button data-i="'+i+'" style="text-align:left;border:.5px solid '+(i===0?'var(--border-accent)':'var(--border)')+';background:'+(i===0?'var(--bg-accent)':'var(--surface-2)')+';color:'+(i===0?'var(--text-accent)':'var(--text-primary)')+';border-radius:var(--radius);padding:9px 11px;cursor:pointer;font-family:inherit;font-size:12.5px;line-height:1.3">'+x.name.split(' — ')[0].split(' (')[0]+'<div style="font-size:11px;color:var(--text-secondary)">'+num(x.n)+' órdenes</div></button>'}).join('');
-function renderOrg(){
-  var x=ORG[curOrg],ticket=x.monto/x.n,anual=x.monto/14,rk=x.risk,rc=rk.lvl==='Bajo'?'success':(rk.lvl==='Medio'?'warning':'danger');
-  function rstat(l,v){return '<div style="background:var(--surface-1);border-radius:var(--radius);padding:8px 9px"><div style="font-size:11px;color:var(--text-secondary)">'+l+'</div><div style="font-size:15px;font-weight:500;margin-top:1px">'+v+'</div></div>';}
-  var season=[42,46,50,48,53,56,55,52,64,82,96,86],mn=['E','F','M','A','M','J','J','A','S','O','N','D'],smax=96;
-  var bars='<div style="display:flex;align-items:flex-end;gap:3px;height:48px;margin-bottom:8px">'+season.map(function(v,m){var pk=m>=9;return '<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center"><div style="width:100%;height:'+(v/smax*40)+'px;background:'+(pk?'var(--fill-accent)':'var(--border-strong)')+';border-radius:2px"></div><div style="font-size:9px;color:var(--text-muted);margin-top:3px">'+mn[m]+'</div></div>'}).join('')+'</div>';
-  document.getElementById('orgCard').innerHTML='<div class="card">'
-   +'<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px"><div style="width:44px;height:44px;flex:0 0 44px;border-radius:50%;background:var(--bg-accent);color:var(--text-accent);display:flex;align-items:center;justify-content:center"><i class="ti ti-building-bank" style="font-size:20px"></i></div><div style="min-width:0"><div style="font-weight:500;font-size:15px">'+x.name+'</div><div style="font-size:12px;color:var(--text-secondary)">RUT '+x.rut+' · '+x.cat+'</div></div></div>'
-   +'<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px"><div class="metric"><div class="l">Gasto histórico</div><div class="v">'+big(x.monto)+'</div></div><div class="metric"><div class="l">Órdenes emitidas</div><div class="v">'+num(x.n)+'</div></div><div class="metric"><div class="l">Gasto anual medio</div><div class="v">'+big(anual)+'</div></div></div>'
-   +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div style="font-size:13px;color:var(--text-secondary)"><i class="ti ti-shield-half" style="font-size:15px;vertical-align:-2px;margin-right:4px"></i>Índice de riesgo del comprador</div><span style="background:var(--bg-'+rc+');color:var(--text-'+rc+');border-radius:99px;padding:4px 12px;font-size:12.5px;font-weight:500">Riesgo '+rk.lvl.toLowerCase()+'</span></div>'
-   +'<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:6px">'+rstat('OC anuladas',rk.anul)+rstat('Desiertas',rk.des)+rstat('Adjudicación',rk.adj)+rstat('Reclamos',rk.rec)+'</div>'
-   +'<div style="font-size:11px;color:var(--text-muted);margin-bottom:16px"><i class="ti ti-database" style="font-size:12px;vertical-align:-1px;margin-right:3px"></i>OC anuladas y desiertas: <b style="color:var(--text-secondary)">datos reales</b> ('+num(x.n)+' órdenes históricas). Adjudicación y reclamos: estimados.</div>'
-   +'<div style="font-size:13px;color:var(--text-secondary);margin-bottom:7px"><i class="ti ti-chart-line" style="font-size:15px;vertical-align:-2px;margin-right:4px"></i>Predicción de demanda</div>'+bars
-   +'<div style="background:var(--bg-accent);color:var(--text-accent);border-radius:var(--radius);padding:9px 12px;font-size:12.5px;margin-bottom:16px"><i class="ti ti-trending-up" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Próxima gran compra estimada: <b>octubre 2026</b> · ~'+big(anual*0.41)+' en '+x.rubros[0].toLowerCase()+'.</div>'
-   +'<div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">Volumen de órdenes vs. el mayor comprador</div><div class="bar" style="height:11px;margin-bottom:16px"><div style="left:0;width:'+(x.n/OMAX*100)+'%"></div></div>'
-   +'<div style="font-size:13px;color:var(--text-secondary);margin-bottom:7px">Compra recurrente</div><div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px">'+x.rubros.map(function(r){return '<span class="mchip">'+r+'</span>'}).join('')+'</div>'
-   +'<div style="border-top:.5px solid var(--border);padding-top:14px;font-size:13px;line-height:1.55"><i class="ti ti-bulb" style="font-size:16px;vertical-align:-2px;margin-right:5px;color:var(--text-accent)"></i>Ticket medio <b>'+money(ticket)+'</b> por orden. Riesgo '+rk.lvl.toLowerCase()+' de anulación/pago — '+(rk.lvl==='Bajo'?'comprador confiable, postula con tranquilidad':'revisa condiciones y garantías antes de postular')+'.</div></div>';
-}
-orgList.querySelectorAll('button').forEach(function(b){b.onclick=function(){curOrg=+b.dataset.i;orgList.querySelectorAll('button').forEach(function(el,i){var on=i===curOrg;el.style.borderColor=on?'var(--border-accent)':'var(--border)';el.style.background=on?'var(--bg-accent)':'var(--surface-2)';el.style.color=on?'var(--text-accent)':'var(--text-primary)'});renderOrg();}});
-
+/* ---- COPILOTO ---- */
 var CHATBOX=document.getElementById('chatMsgs');
 function addMsg(who,html){var d=document.createElement('div');if(who==='a'){d.style.display='flex';d.style.gap='9px';d.style.alignSelf='flex-start';d.innerHTML='<div style="width:28px;height:28px;flex:0 0 28px;border-radius:50%;background:var(--bg-accent);display:flex;align-items:center;justify-content:center"><i class="ti ti-sparkles" style="font-size:15px;color:var(--text-accent)"></i></div><div class="chatbubble-a">'+html+'</div>';}else{d.style.alignSelf='flex-end';d.innerHTML='<div class="chatbubble-u">'+html+'</div>';}CHATBOX.appendChild(d);CHATBOX.scrollTop=CHATBOX.scrollHeight;}
-function answer(q){var t=q.toLowerCase();function pr(k){var p=DATA[k];return 'El precio de referencia de <b>'+p.name.toLowerCase()+'</b> ('+p.unit+') es <b>'+money(p.med)+'</b> — rango '+money(p.p25)+' a '+money(p.p75)+' sobre '+num(p.n)+' compras. Para ganar, oferta bajo la mediana.';}
- if(t.indexOf('toner')>=0||t.indexOf('tóner')>=0)return pr('toner');
- if(t.indexOf('diesel')>=0||t.indexOf('diésel')>=0||t.indexOf('combustible')>=0)return pr('diesel');
- if(t.indexOf('pasaj')>=0||t.indexOf('vuelo')>=0||t.indexOf('aére')>=0)return pr('pasajes')+' El mayor proveedor del rubro es <b>LATAM Airlines</b>, con 757.492 órdenes ganadas al Estado.';
- if(t.indexOf('papel')>=0)return pr('papel');
- if(t.indexOf('verdura')>=0)return pr('verduras');
- if(t.indexOf('exam')>=0||t.indexOf('exám')>=0)return pr('examenes');
- if(t.indexOf('competencia')>=0||t.indexOf('latam')>=0||t.indexOf('dimerc')>=0||t.indexOf('gana')>=0||t.indexOf('proveedor')>=0)return 'Los mayores proveedores del Estado son <b>LATAM</b> (757k órdenes), <b>Dimerc</b> (356k, oficina) y <b>Copec</b> ($1,02 billones en combustible). Abre la sección Competencia para ver cada ficha.';
- if(t.indexOf('oportunidad')>=0||t.indexOf('laboratorio')>=0||t.indexOf('licitac')>=0)return 'Hay <b>10 oportunidades abiertas</b> que calzan con tu perfil. La de mayor afinidad es <b>tubo plástico de laboratorio</b> (compra ágil, score 94). Revisa la sección Oportunidades.';
- if(t.indexOf('cotiz')>=0||t.indexOf('oferta')>=0||t.indexOf('redacta')>=0)return 'Puedo redactar una cotización de compra ágil. Dime el producto y la cantidad, y la genero con el precio de referencia sugerido.';
- return 'Puedo responder sobre precio de referencia (tóner, diésel, pasajes, papel…), competencia y oportunidades abiertas. Prueba una de las sugerencias.';}
+function answer(q){var t=q.toLowerCase();
+ function pr(k){var p=DATA[k];return 'El precio de referencia de <b>'+p.name.toLowerCase()+'</b> es <b>'+money(p.med)+'</b> por '+p.unit+' — rango '+money(p.p25)+' a '+money(p.p75)+' sobre '+num(p.n)+' compras del Estado.'+(p.mio?' Tu empresa ya vendió '+money(p.mio)+' de este producto.':'');}
+ if(t.indexOf('sábana')>=0||t.indexOf('sabana')>=0)return pr('sabanas')+' Hay una licitación abierta de sábana desechable por $53.000.000 con score 96 — es tu mejor oportunidad ahora.';
+ if(t.indexOf('gasa')>=0)return pr('gasas');
+ if(t.indexOf('venda')>=0)return pr('vendas');
+ if(t.indexOf('plana')>=0||t.indexOf('quirúrgic')>=0||t.indexOf('quirurgic')>=0)return pr('planas');
+ if(t.indexOf('camilla')>=0)return pr('cubre');
+ if(t.indexOf('competencia')>=0||t.indexOf('competidor')>=0)return 'Tus competidores reales en estos productos son <b>León Borzut</b> ($13.299 M), <b>Reutter</b> ($8.226 M) y <b>Madegom</b> ($7.861 M). Tú vendes $90 M — hay mucho espacio para crecer. Abre Competencia para ver cada ficha.';
+ if(t.indexOf('cliente')>=0||t.indexOf('hospital')>=0||t.indexOf('organismo')>=0)return 'Tu mayor cliente es el <b>Servicio de Salud Valparaíso San Antonio</b> (Hospital Claudio Vicuña): te compró <b>$78 M</b> en 16 órdenes, y es además el más confiable (solo 0,98% de anulación).';
+ if(t.indexOf('oportunidad')>=0||t.indexOf('licitac')>=0)return 'Hay <b>9 oportunidades abiertas</b> que calzan con tu perfil. La mejor: <b>convenio suministro de sábana desechable</b> por $53.000.000 (score 96).';
+ return 'Puedo responder sobre tus precios de referencia (sábanas, gasas, vendas, planas quirúrgicas…), tu competencia y tus oportunidades abiertas. Prueba una sugerencia.';}
 function chatSend(q){if(!q)return;addMsg('u',q);window.setTimeout(function(){addMsg('a',answer(q))},220);}
-var SUG=['Precio del tóner','¿Cuánto paga el Estado por diésel?','¿Quién gana en pasajes aéreos?','Oportunidades de laboratorio'];
+var SUG=['Precio de las sábanas de hospital','¿Quiénes son mis competidores?','¿Cuál es mi mejor cliente?','Oportunidades abiertas'];
 document.getElementById('chatSug').innerHTML=SUG.map(function(s){return '<button class="chip" data-q="'+s+'">'+s+'</button>'}).join('');
 document.querySelectorAll('#chatSug button').forEach(function(b){b.onclick=function(){chatSend(b.dataset.q)}});
 var ci=document.getElementById('chatInput');
 document.getElementById('chatSend').onclick=function(){chatSend(ci.value.trim());ci.value='';};
 ci.addEventListener('keydown',function(e){if(e.key==='Enter'){chatSend(ci.value.trim());ci.value='';}});
-addMsg('a','Hola. Soy tu copiloto de compras públicas. Pregúntame por el precio de referencia de un producto, quién domina un rubro, o qué oportunidades hay abiertas.');
-
-var titles={precio:'Precio de referencia',oport:'Oportunidades',postuladas:'Postulaciones',comp:'Competencia',org:'Organismos',alertas:'Alertas',copiloto:'Copiloto IA'};
-document.querySelectorAll('#nav button').forEach(function(b){b.onclick=function(){document.querySelectorAll('#nav button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('on')});document.getElementById('sec-'+b.dataset.s).classList.add('on');document.getElementById('pageTitle').textContent=titles[b.dataset.s];}});
-
-var themeBtn=document.getElementById('themeBtn');
-themeBtn.onclick=function(){var h=document.documentElement;var d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');themeBtn.innerHTML='<i class="ti '+(d?'ti-moon':'ti-sun')+'"></i>';};
+addMsg('a','Hola AP SpA. Detecté tu perfil: <b>insumos clínicos y quirúrgicos</b>, 196 órdenes y $241 M vendidos al Estado. Pregúntame por el precio de cualquiera de tus productos, por tu competencia o por las oportunidades abiertas.');
 
 document.querySelectorAll('#copMode button').forEach(function(b){b.onclick=function(){var m=b.dataset.m;document.querySelectorAll('#copMode button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');document.getElementById('chatView').style.display=m==='chat'?'block':'none';document.getElementById('basesView').style.display=m==='bases'?'block':'none';}});
 var LICS=OPP.filter(function(o){return o.t==='Licitación'});
@@ -417,21 +463,26 @@ function renderBase(){
   var o=LICS[+baseSel.value||0],gar=Math.round(o.monto*0.03),alto=o.monto>50000000;
   function sec(icon,title,body){return '<div style="margin-bottom:15px"><div style="font-size:13px;font-weight:500;margin-bottom:6px"><i class="ti '+icon+'" style="font-size:15px;vertical-align:-2px;margin-right:5px;color:var(--text-accent)"></i>'+title+'</div>'+body+'</div>';}
   var fechas='<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 14px">'+[['Publicación','hace 4 días'],['Cierre de consultas','en 3 días'],['Cierre de ofertas','en 9 días'],['Adjudicación estimada','en 25 días']].map(function(f){return '<div style="font-size:12.5px;color:var(--text-secondary)">'+f[0]+': <b style="color:var(--text-primary)">'+f[1]+'</b></div>'}).join('')+'</div>';
-  var reqs='<ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;color:var(--text-secondary)"><li>Inscripción vigente en ChileProveedores</li><li>Experiencia comprobable en el rubro</li><li>Ficha técnica de los productos ofertados</li><li>Declaración jurada de habilidad</li></ul>';
+  var reqs='<ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;color:var(--text-secondary)"><li>Inscripción vigente en ChileProveedores</li><li>Experiencia comprobable en insumos clínicos</li><li>Ficha técnica y registro ISP de los productos</li><li>Declaración jurada de habilidad</li></ul>';
   var riesgos='<ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;color:var(--text-secondary)"><li>'+(alto?'Monto alto: exige boleta de garantía bancaria':'Monto acotado: admite vale vista o certificado de fianza')+'</li><li>Evaluación 60% precio / 40% técnico</li><li>Penalidades por atraso en la entrega</li></ul>';
   document.getElementById('baseCard').innerHTML='<div class="card"><div style="display:flex;justify-content:space-between;align-items:start;gap:10px;margin-bottom:8px"><div style="font-size:15px;font-weight:500">'+o.nom+'</div><span class="mchip">'+o.cod+'</span></div>'
-   +'<div style="background:var(--bg-accent);color:var(--text-accent);border-radius:var(--radius);padding:9px 12px;font-size:12.5px;margin-bottom:16px"><i class="ti ti-sparkles" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Resumen generado por IA a partir de las bases · presupuesto '+money(o.monto)+'</div>'
-   +sec('ti-calendar-event','Fechas clave',fechas)
-   +sec('ti-list-check','Requisitos de postulación',reqs)
+   +'<div style="background:var(--bg-accent);color:var(--text-accent);border-radius:var(--radius);padding:9px 12px;font-size:12.5px;margin-bottom:16px"><i class="ti ti-sparkles" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Resumen generado por IA a partir de las bases · presupuesto '+money(o.monto)+' · tu precio de referencia: '+money(o.ref.med)+'</div>'
+   +sec('ti-calendar-event','Fechas clave',fechas)+sec('ti-list-check','Requisitos de postulación',reqs)
    +sec('ti-shield','Garantía','<div style="font-size:13px;color:var(--text-secondary)">Seriedad de la oferta por <b style="color:var(--text-primary)">'+money(gar)+'</b> (~3% del monto).</div>')
    +sec('ti-alert-triangle','Cláusulas de riesgo',riesgos)
    +'<div style="border-top:.5px solid var(--border);padding-top:12px;display:flex;gap:6px;flex-wrap:wrap">'+['¿Qué garantía piden?','¿Cuándo cierra?','¿Cómo se evalúa?'].map(function(q){return '<button class="chip" data-bq="'+q+'">'+q+'</button>'}).join('')+'</div><div id="baseAns" style="margin-top:10px"></div></div>';
-  var ans={'¿Qué garantía piden?':'Garantía de seriedad de la oferta por '+money(gar)+' (~3% del monto), '+(alto?'con boleta de garantía bancaria':'admite vale vista o certificado de fianza')+'.','¿Cuándo cierra?':'El cierre de ofertas es en 9 días; las consultas cierran en 3 días. La adjudicación se estima en 25 días.','¿Cómo se evalúa?':'Ponderación 60% precio, 40% técnico. Con tu precio de referencia, una oferta bajo la mediana del rubro maximiza el puntaje de precio sin resignar margen.'};
+  var ans={'¿Qué garantía piden?':'Garantía de seriedad por '+money(gar)+' (~3% del monto), '+(alto?'con boleta bancaria':'admite vale vista')+'.','¿Cuándo cierra?':'Cierre de ofertas en 9 días; consultas en 3 días.','¿Cómo se evalúa?':'60% precio / 40% técnico. Tu precio de referencia es '+money(o.ref.med)+' — ofertar bajo esa mediana maximiza tu puntaje de precio.'};
   document.querySelectorAll('#baseCard [data-bq]').forEach(function(b){b.onclick=function(){document.getElementById('baseAns').innerHTML='<div style="background:var(--surface-1);border-radius:var(--radius);padding:10px 12px;font-size:13px;line-height:1.55"><i class="ti ti-sparkles" style="font-size:14px;vertical-align:-2px;margin-right:4px;color:var(--text-accent)"></i>'+ans[b.dataset.bq]+'</div>';}});
 }
-baseSel.onchange=renderBase;renderBase();
+baseSel.onchange=renderBase;
 
-renderCard();renderOpp();renderSup();renderCanales();renderRules();renderOrg();renderPost();
+/* ---- NAV / TEMA ---- */
+var titles={precio:'Precio de referencia',oport:'Oportunidades',postuladas:'Postulaciones',comp:'Competencia',org:'Organismos',alertas:'Alertas',copiloto:'Copiloto IA'};
+document.querySelectorAll('#nav button').forEach(function(b){b.onclick=function(){document.querySelectorAll('#nav button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('on')});document.getElementById('sec-'+b.dataset.s).classList.add('on');document.getElementById('pageTitle').textContent=titles[b.dataset.s];}});
+var themeBtn=document.getElementById('themeBtn');
+themeBtn.onclick=function(){var h=document.documentElement;var d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');themeBtn.innerHTML='<i class="ti '+(d?'ti-moon':'ti-sun')+'"></i>';};
+
+renderCard();renderOpp();renderSup();renderOrg();renderCanales();renderRules();renderPost();renderBase();
 </script>
 </body>
 </html>
