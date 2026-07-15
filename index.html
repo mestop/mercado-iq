@@ -151,6 +151,7 @@ body{margin:0;font-family:var(--font-sans);background:var(--surface-0);color:var
         <div class="sub">Licitaciones y compras ágiles publicadas ahora, rankeadas por afinidad con lo que realmente vendes.</div>
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
           <div class="mchip"><i class="ti ti-user-check" style="font-size:14px;vertical-align:-2px;margin-right:3px"></i>Perfil detectado: <b>insumos clínicos y quirúrgicos</b></div>
+          <div class="mchip"><i class="ti ti-clock" style="font-size:14px;vertical-align:-2px;margin-right:3px"></i>Solo procesos <b>abiertos</b> · al 15 jul 2026</div>
           <div class="seg" id="opfilter" style="margin-left:auto;display:inline-flex;border:.5px solid var(--border-strong);border-radius:var(--radius);overflow:hidden">
             <button data-f="todas" class="chip on" style="border:none;border-radius:0">Todas</button>
             <button data-f="Licitación" class="chip" style="border:none;border-radius:0">Licitaciones</button>
@@ -309,17 +310,21 @@ function renderSim(p){
 }
 prods.querySelectorAll('button').forEach(function(b){b.onclick=function(){cur=b.dataset.p;curProduct=null;prods.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');renderCard();}});
 
-/* ---- OPORTUNIDADES REALES (abiertas hoy, rubro de AP SPA) ---- */
+/* ---- OPORTUNIDADES REALES ABIERTAS (FH_CIERRE > hoy, 15 jul 2026) ---- */
+/* Filtradas por fecha de cierre real y estado, no por fecha de deteccion. */
 var OPP=[
- {t:'Licitación',cod:'4375-69-LE26',nom:'Convenio suministro sábana desechable de 2,0 × 1,50 mts',monto:53000000,cat:'Salud',score:96,ref:DATA.sabanas},
- {t:'Compra ágil',cod:'1057491-1336-COT26',nom:'Insumos clínicos para distintas unidades clínicas y pabellones',monto:7000000,cat:'Salud',score:92,ref:DATA.gasas},
- {t:'Licitación',cod:'1350296-26-LE26',nom:'Convenio de suministros para ginecología — unidad de proceso quirúrgico',monto:70588000,cat:'Salud',score:87,ref:DATA.planas,dir:1},
- {t:'Compra ágil',cod:'5602-97-COT26',nom:'Insumos clínicos y material cortopunzante',monto:310000,cat:'Salud',score:80,ref:DATA.gasas},
- {t:'Licitación',cod:'948355-56-LP26',nom:'Adquisición de insumos médicos para cirugía robótica',monto:300000000,cat:'Salud',score:71,ref:DATA.planas},
- {t:'Compra ágil',cod:'1754-363-COT26',nom:'Equipamientos clínicos',monto:6143000,cat:'Equipamiento',score:58,ref:DATA.cubre},
- {t:'Compra ágil',cod:'2138-204-COT26',nom:'Insumos de laboratorio clínico (eluent, hemolysis solution)',monto:1800000,cat:'Laboratorio',score:44,ref:DATA.gasas},
- {t:'Licitación',cod:'1057544-243-LE26',nom:'Suministro de repuestos y equipos menores no clínicos',monto:11000000,cat:'Equipamiento',score:29,ref:DATA.cubre,dir:1},
- {t:'Licitación',cod:'2831-20-LP26',nom:'Adquisición de clínica veterinaria móvil Quillota',monto:132435000,cat:'Veterinaria',score:12,ref:DATA.cubre}
+ {t:'Licitación',cod:'3191-66-LE26',nom:'LE INS3 · Adquisición de insumos clínicos',monto:70000000,cat:'Salud',score:96,dias:5,cierre:'20 jul 2026',ref:DATA.gasas,
+  hist:'Ya ganaste el <b>LE INS2</b> (3191-3-LE26) de este mismo comprador, con sets de suministros quirúrgicos a $450. Este es el siguiente de la serie.'},
+ {t:'Licitación',cod:'1057544-217-LP26',nom:'Compra por suministro de insumos clínicos para pabellones',monto:270000000,cat:'Salud',score:93,dias:5,cierre:'20 jul 2026',ref:DATA.planas,
+  hist:'Tu mayor adjudicación histórica fue <b>Insumos para pabellón</b> (898-70-LQ24): planas quirúrgicas a $4.480, $48,4M. Mismo terreno.'},
+ {t:'Licitación',cod:'1113159-11-L126',nom:'Insumos médicos',monto:6000000,cat:'Salud',score:78,dias:5,cierre:'20 jul 2026',ref:DATA.vendas},
+ {t:'Licitación',cod:'1499-129-LP26',nom:'RBV · Insumos clínicos para el cuidado de la piel',monto:348755000,cat:'Salud',score:71,dias:5,cierre:'20 jul 2026',ref:DATA.gelatina},
+ {t:'Compra ágil',cod:'1641-4071-COT26',nom:'Lápiz marcador quirúrgico estéril con regla',monto:100000,cat:'Salud',score:68,dias:1,cierre:'16 jul 2026',ref:DATA.gasas,
+  hist:'Ya adjudicaste <b>lápices quirúrgicos de cauterio</b> (1057472-122-LP25).'},
+ {t:'Licitación',cod:'4407-21-L126',nom:'Insumos médicos para abastecer farmacia del CESFAM',monto:1500000,cat:'Salud',score:64,dias:5,cierre:'20 jul 2026',ref:DATA.vendas},
+ {t:'Licitación',cod:'1180747-10-LE26',nom:'Adquisición instrumental quirúrgico CECOSF · nuevo llamado',monto:22617000,cat:'Equipamiento',score:52,dias:2,cierre:'17 jul 2026',ref:DATA.planas,dir:1},
+ {t:'Licitación',cod:'1070620-68-LE26',nom:'VRC · Suministro de instrumental microquirúrgico',monto:69751000,cat:'Equipamiento',score:34,dias:2,cierre:'17 jul 2026',ref:DATA.planas},
+ {t:'Licitación',cod:'3391-13-LR26',nom:'Suministro de reactivos e insumos para laboratorio clínico',monto:692657533,cat:'Laboratorio',score:16,dias:2,cierre:'17 jul 2026',ref:DATA.gasas}
 ];
 var DIRSIG=['El organismo adjudicó los últimos 3 procesos del rubro al mismo proveedor.','Especificaciones técnicas compatibles con un único fabricante.','Plazo de postulación acotado — menos de 7 días corridos.'];
 var opf='todas';
@@ -330,7 +335,9 @@ function renderOpp(){
     var c=sColor(o.score);
     var bs=c==='gray'?'background:var(--surface-1);color:var(--text-muted)':'background:var(--bg-'+c+');color:var(--text-'+c+')';
     var tag=o.t==='Compra ágil'?'<span style="color:var(--text-accent)">Compra ágil</span>':'Licitación';
-    return '<div class="row" data-cod="'+o.cod+'"><div style="min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+o.nom+(o.dir?' <i class="ti ti-flag" style="color:var(--text-warning);font-size:13px"></i>':'')+'</div><div style="font-size:12px;color:var(--text-secondary)">'+tag+' · '+money(o.monto)+' · '+o.cat+' · '+o.cod+'</div></div><div class="badge" style="'+bs+'"><div class="n">'+o.score+'</div><div class="t">score</div></div></div>';
+    var urg=o.dias<=2?'color:var(--text-danger);font-weight:500':'color:var(--text-secondary)';
+    var pl=o.dias===1?'día':'días';
+    return '<div class="row" data-cod="'+o.cod+'"><div style="min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+o.nom+(o.dir?' <i class="ti ti-flag" style="color:var(--text-warning);font-size:13px"></i>':'')+(o.hist?' <i class="ti ti-history" style="color:var(--text-success);font-size:13px"></i>':'')+'</div><div style="font-size:12px;color:var(--text-secondary)">'+tag+' · '+money(o.monto)+' · '+o.cat+' · <span style="'+urg+'">cierra en '+o.dias+' '+pl+'</span> · '+o.cod+'</div></div><div class="badge" style="'+bs+'"><div class="n">'+o.score+'</div><div class="t">score</div></div></div>';
   }).join('');
   document.querySelectorAll('#oportList .row').forEach(function(r){r.onclick=function(){showOpp(r.dataset.cod)}});
 }
@@ -358,7 +365,9 @@ function showOpp(cod){
   var basesBtn=o.t==='Licitación'?'<button class="chip" onclick="goBases(\''+o.cod+'\')">Analizar bases en Copiloto ↗</button>':'<button class="chip" onclick="goSection(\'copiloto\')">Preguntar al Copiloto ↗</button>';
   var bases='<div style="border:.5px solid var(--border);border-radius:var(--radius);padding:12px;margin-top:12px"><div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px"><i class="ti ti-message-question" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Pregunta sobre esta oportunidad y sus bases</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">'+['¿Qué garantía piden?','¿Cuándo cierra?','¿Cómo se evalúa?'].map(function(q){return '<button class="chip" data-oq="'+q+'">'+q+'</button>'}).join('')+'</div><div id="oppQAns" style="margin-bottom:8px"></div>'+basesBtn+'</div>';
   var dirP=o.dir?'<div style="background:var(--bg-warning);color:var(--text-warning);border-radius:var(--radius);padding:10px 13px;font-size:13px;line-height:1.55;margin-top:12px"><i class="ti ti-flag" style="font-size:15px;vertical-align:-2px;margin-right:5px"></i><b>Posible licitación dirigida</b> — señales: '+DIRSIG.map(function(s){return s.replace(/\.$/,'')}).join(' · ')+'.</div>':'';
-  document.getElementById('oportDetail').innerHTML='<div class="card"><div style="display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:12px"><div><div style="font-size:15px;font-weight:500">'+o.nom+'</div><div style="font-size:12px;color:var(--text-secondary)">'+o.t+' · '+o.cod+' · presupuesto '+money(o.monto)+'</div></div><span class="mchip">score '+o.score+'</span></div><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">'+ref+comp+orga+'</div>'+probBlock+bases+dirP+'</div>';
+  var histP=o.hist?'<div style="background:var(--bg-success);color:var(--text-success);border-radius:var(--radius);padding:10px 13px;font-size:13px;line-height:1.55;margin-top:12px"><i class="ti ti-history" style="font-size:15px;vertical-align:-2px;margin-right:5px"></i><b>Tu historial juega a favor.</b> '+o.hist+'</div>':'';
+  var pl=o.dias===1?'día':'días', uc=o.dias<=2?'danger':'accent';
+  document.getElementById('oportDetail').innerHTML='<div class="card"><div style="display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:12px"><div><div style="font-size:15px;font-weight:500">'+o.nom+'</div><div style="font-size:12px;color:var(--text-secondary)">'+o.t+' · '+o.cod+' · presupuesto '+money(o.monto)+'</div></div><div style="text-align:right;flex:0 0 auto"><span class="mchip">score '+o.score+'</span><div style="font-size:11.5px;margin-top:5px;color:var(--text-'+uc+')">cierra en '+o.dias+' '+pl+' · '+o.cierre+'</div></div></div><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">'+ref+comp+orga+'</div>'+histP+probBlock+bases+dirP+'</div>';
   document.querySelectorAll('#oportDetail [data-oq]').forEach(function(b){b.onclick=function(){document.getElementById('oppQAns').innerHTML='<div style="background:var(--surface-1);border-radius:var(--radius);padding:9px 11px;font-size:12.5px;line-height:1.5"><i class="ti ti-sparkles" style="font-size:13px;vertical-align:-2px;margin-right:4px;color:var(--text-accent)"></i>'+ans[b.dataset.oq]+'</div>';}});
 }
 
@@ -506,14 +515,14 @@ var CHATBOX=document.getElementById('chatMsgs');
 function addMsg(who,html){var d=document.createElement('div');if(who==='a'){d.style.display='flex';d.style.gap='9px';d.style.alignSelf='flex-start';d.innerHTML='<div style="width:28px;height:28px;flex:0 0 28px;border-radius:50%;background:var(--bg-accent);display:flex;align-items:center;justify-content:center"><i class="ti ti-sparkles" style="font-size:15px;color:var(--text-accent)"></i></div><div class="chatbubble-a">'+html+'</div>';}else{d.style.alignSelf='flex-end';d.innerHTML='<div class="chatbubble-u">'+html+'</div>';}CHATBOX.appendChild(d);CHATBOX.scrollTop=CHATBOX.scrollHeight;}
 function answer(q){var t=q.toLowerCase();
  function pr(k){var p=DATA[k];return 'El precio de referencia de <b>'+p.name.toLowerCase()+'</b> es <b>'+money(p.med)+'</b> por '+p.unit+' — rango '+money(p.p25)+' a '+money(p.p75)+' sobre '+num(p.n)+' compras del Estado.'+(p.mio?' Tu empresa ya vendió '+money(p.mio)+' de este producto.':'');}
- if(t.indexOf('sábana')>=0||t.indexOf('sabana')>=0)return pr('sabanas')+' Hay una licitación abierta de sábana desechable por $53.000.000 con score 96 — es tu mejor oportunidad ahora.';
+ if(t.indexOf('sábana')>=0||t.indexOf('sabana')>=0)return pr('sabanas')+' Ahora mismo no hay licitaciones abiertas de sábanas: la última (convenio de sábana desechable, $53M) cerró el 4 de junio. Te aviso en cuanto salga la próxima.';
  if(t.indexOf('gasa')>=0)return pr('gasas');
  if(t.indexOf('venda')>=0)return pr('vendas');
  if(t.indexOf('plana')>=0||t.indexOf('quirúrgic')>=0||t.indexOf('quirurgic')>=0)return pr('planas');
  if(t.indexOf('camilla')>=0)return pr('cubre');
  if(t.indexOf('competencia')>=0||t.indexOf('competidor')>=0)return 'Tus competidores reales en estos productos son <b>León Borzut</b> ($13.299 M), <b>Reutter</b> ($8.226 M) y <b>Madegom</b> ($7.861 M). Tú vendes $90 M — hay mucho espacio para crecer. Abre Competencia para ver cada ficha.';
  if(t.indexOf('cliente')>=0||t.indexOf('hospital')>=0||t.indexOf('organismo')>=0)return 'Tu mayor cliente es el <b>Servicio de Salud Valparaíso San Antonio</b> (Hospital Claudio Vicuña): te compró <b>$78 M</b> en 16 órdenes, y es además el más confiable (solo 0,98% de anulación).';
- if(t.indexOf('oportunidad')>=0||t.indexOf('licitac')>=0)return 'Hay <b>9 oportunidades abiertas</b> que calzan con tu perfil. La mejor: <b>convenio suministro de sábana desechable</b> por $53.000.000 (score 96).';
+ if(t.indexOf('oportunidad')>=0||t.indexOf('licitac')>=0)return 'Hay <b>9 oportunidades abiertas</b> que calzan con tu perfil. La mejor: <b>LE INS3 · Adquisición de insumos clínicos</b> ($70 M, score 96, cierra en 5 días) — y no es casualidad: <b>ya ganaste el LE INS2</b> de ese mismo comprador. Le sigue <b>Insumos clínicos para pabellones</b> ($270 M), el terreno de tu mayor adjudicación histórica.';
  if(t.indexOf('tasa')>=0||t.indexOf('éxito')>=0||t.indexOf('exito')>=0||t.indexOf('gano')>=0||t.indexOf('gané')>=0)return 'Tu tasa de éxito real es <b>39%</b>: ganaste <b>16 de 41</b> postulaciones, con <b>$237 M</b> adjudicados. Tus dos mayores adjudicaciones (planas quirúrgicas, $104 M) las ganaste <b>sin competencia</b>.';
  if(t.indexOf('perd')>=0)return 'Perdiste 25 de 41 líneas. Las más dolorosas: <b>gasa estéril</b> ($50,4M — Reutter ganó con $34 vs tus $47) y <b>gasas de droguería</b>, donde <b>perdiste por $1</b> (Nemo $43, tú $44). Y en <b>unidades médicas</b> fuiste el más barato ($895) y perdiste igual contra Qualymed ($1.330).';
  if(t.indexOf('mesa')>=0||t.indexOf('margen')>=0||t.indexOf('caro')>=0||t.indexOf('barato')>=0)return 'En <b>cubre camillas</b> ganaste con $1.935 y el segundo ofertó $2.254: podías haber cobrado ~$2.250 y ganar igual — <b>dejaste unos $17,2 M sobre la mesa</b>. Ojo también: dos veces fuiste el más barato y perdiste, así que bajar el precio no siempre paga.';
