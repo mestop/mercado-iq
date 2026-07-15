@@ -162,9 +162,17 @@ body{margin:0;font-family:var(--font-sans);background:var(--surface-0);color:var
       </section>
 
       <section class="sec" id="sec-postuladas">
-        <div class="h2">Postulaciones abiertas</div>
-        <div class="sub">Procesos donde ya ofertaste y siguen en evaluación, con tu probabilidad frente a cada competidor.</div>
-        <div class="mchip" style="display:inline-block;margin-bottom:14px"><i class="ti ti-info-circle" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Demo: las postulaciones son simuladas (Mercado Público no publica este dato). Los competidores y precios sí son reales.</div>
+        <div class="h2">Tus postulaciones</div>
+        <div class="sub">Cada licitación donde ofertaste, contra quién competiste, a qué precio ofertó cada uno y quién ganó.</div>
+        <div id="postStats" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px"></div>
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px">
+          <div class="mchip"><i class="ti ti-database" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Ofertas y adjudicaciones <b>reales</b> de Mercado Público</div>
+          <div class="seg" id="postfilter" style="margin-left:auto;display:inline-flex;border:.5px solid var(--border-strong);border-radius:var(--radius);overflow:hidden">
+            <button data-f="todas" class="chip on" style="border:none;border-radius:0">Todas</button>
+            <button data-f="win" class="chip" style="border:none;border-radius:0">Ganadas</button>
+            <button data-f="loss" class="chip" style="border:none;border-radius:0">Perdidas</button>
+          </div>
+        </div>
         <div id="postList"></div>
         <div id="postDetail" style="margin-top:14px"></div>
       </section>
@@ -354,14 +362,75 @@ function showOpp(cod){
   document.querySelectorAll('#oportDetail [data-oq]').forEach(function(b){b.onclick=function(){document.getElementById('oppQAns').innerHTML='<div style="background:var(--surface-1);border-radius:var(--radius);padding:9px 11px;font-size:12.5px;line-height:1.5"><i class="ti ti-sparkles" style="font-size:13px;vertical-align:-2px;margin-right:4px;color:var(--text-accent)"></i>'+ans[b.dataset.oq]+'</div>';}});
 }
 
-/* ---- POSTULADAS (simuladas, con competidores y precios reales) ---- */
+/* ---- POSTULACIONES REALES de AP SPA (ofertas y adjudicaciones de Mercado Público) ---- */
+/* Fuente: LIC_ADJ_PROD_PROVEEDORES — cada bloque es una línea real, con todos sus oferentes y el ganador real. */
+var PSTATS={total:41,ganadas:16,tasa:39,adjudicado:236932528};
 var POST=[
- {t:'Licitación',cod:'4375-69-LE26',nom:'Convenio suministro sábana desechable 2,0 × 1,50 mts',monto:53000000,estado:'En evaluación',bidders:[{name:'Tú (AP SpA)',price:2750,me:1},{name:'Reutter',price:2610},{name:'Madegom',price:2980},{name:'León Borzut',price:3350}]},
- {t:'Compra ágil',cod:'1057491-1336-COT26',nom:'Insumos clínicos para unidades clínicas y pabellones',monto:7000000,estado:'En evaluación',bidders:[{name:'Tú (AP SpA)',price:315,me:1},{name:'Inmed',price:352},{name:'Hospitalia',price:389}]},
- {t:'Licitación',cod:'1350296-26-LE26',nom:'Convenio de suministros para ginecología',monto:70588000,estado:'En evaluación',bidders:[{name:'Tú (AP SpA)',price:12900,me:1},{name:'León Borzut',price:11400},{name:'Tecnika',price:13800},{name:'RTM',price:15200}]}
+ {cod:'1057539-162-LR25',nom:'Convenio de suministro de insumos de rehabilitación',prod:'Cubre camillas',qty:54000,cierre:'29 ago 2025',gane:1,total:104490000,
+  bids:[{n:'Tú (AP SpA)',p:1935,w:1,me:1},{n:'Munnich Pharma Medical',p:2254},{n:'Greenwich Medical',p:2300},{n:'Distribuidora Papeles Industriales',p:2425},{n:'Comercial LBF',p:4250},{n:'Comerc. de Tecnologías Médicas',p:11048}],
+  ins:'Ganaste siendo el más barato de 6 oferentes. Pero el segundo (Munnich) ofertó <b>$2.254</b>: podías haber cobrado hasta ~$2.250 y ganar igual — <b>dejaste unos $17,2M sobre la mesa</b>.'},
+ {cod:'898-35-LE26',nom:'Plana quirúrgica · sábanas para mesa quirúrgica',prod:'Planas quirúrgicas',qty:144000,cierre:'2 mar 2026',gane:1,total:55800000,
+  bids:[{n:'Tú (AP SpA)',p:4650,w:1,me:1}],
+  ins:'Ganaste <b>sin competencia</b>: fuiste el único oferente. Tus dos mayores adjudicaciones en planas quirúrgicas ($104M juntas) fueron sin rivales — ese es tu nicho protegido.'},
+ {cod:'898-70-LQ24',nom:'Insumos para pabellón',prod:'Planas quirúrgicas',qty:10800,cierre:'22 abr 2024',gane:1,total:48384000,
+  bids:[{n:'Tú (AP SpA)',p:4480,w:1,me:1}],
+  ins:'Otra adjudicación <b>como único oferente</b>. Nadie más compitió en planas quirúrgicas en este proceso.'},
+ {cod:'1057480-30-LR24',nom:'Programa de aseo y menaje',prod:'Toallas de papel',qty:12000,cierre:'15 jul 2024',gane:1,total:20040000,
+  bids:[{n:'Eglovex',p:1550},{n:'Tú (AP SpA)',p:1670,w:1,me:1},{n:'Eco Plásticos Chile',p:1750},{n:'Castilla y Aragón',p:1874},{n:'Ventia',p:1968},{n:'Distribuidora Manzano',p:2250},{n:'Munnich Pharma Medical',p:2271},{n:'Inmed Droguería',p:2295},{n:'Dist. Papeles Industriales',p:2301},{n:'Grupo DK Servicios',p:2821},{n:'Ecolab',p:5451},{n:'Importadora Magno',p:12800}],
+  ins:'Ganaste <b>sin ser el más barato</b>: Eglovex ofertó $1.550 (7% menos que tú) y perdió. Contra 12 oferentes, la evaluación no fue solo precio.'},
+ {cod:'2311-123-L125',nom:'Compra insumos droguería',prod:'Gasas o curetas quirúrgicas',qty:80000,cierre:'29 sep 2025',gane:0,total:3440000,
+  bids:[{n:'Comercial LBF',p:27},{n:'Coldiab',p:39},{n:'Nemo Chile',p:43,w:1},{n:'Tú (AP SpA)',p:44,me:1},{n:'Adioffice',p:46},{n:'Global Healthcare Chile',p:48},{n:'Medicpro',p:49},{n:'JFV',p:51},{n:'Soc. Inmobiliaria y Prestadora',p:56},{n:'Storemed',p:59},{n:'Farmacéutica Caribean',p:60},{n:'Artículos Médicos y Quirúrgicos',p:60},{n:'Comercial Intermédica',p:70},{n:'Dist. Productos de Laboratorio',p:71},{n:'Medicaltek Chile',p:90},{n:'Sur',p:100}],
+  ins:'<b>Perdiste por $1.</b> Nemo Chile ganó con $43; tú ofertaste $44. Y fíjate: LBF ofertó <b>$27</b> — mucho más barato — y tampoco ganó.'},
+ {cod:'1979-128-LQ25',nom:'Convenio de suministro de insumos médicos para pabellón',prod:'Unidades médicas',qty:9000,cierre:'23 jul 2025',gane:0,total:11970000,
+  bids:[{n:'Tú (AP SpA)',p:895,me:1},{n:'Qualymed',p:1330,w:1},{n:'Soluciones Médicas',p:1400},{n:'Drager Chile',p:3871}],
+  ins:'<b>Fuiste el más barato y perdiste igual</b>: ganó Qualymed con $1.330, un <b>49% más caro</b> que tu $895. Prueba de que el precio no lo es todo — revisa tu propuesta técnica.'},
+ {cod:'1003473-72-LE25',nom:'Convenio de suministro de gasa estéril para hospital',prod:'Vendas de gasa',qty:1483200,cierre:'24 abr 2025',gane:0,total:50428800,
+  bids:[{n:'Reutter',p:34,w:1},{n:'Adioffice',p:46},{n:'Nemo Chile',p:46},{n:'Tú (AP SpA)',p:47,me:1},{n:'Sur',p:50},{n:'Comercial LBF',p:51},{n:'Artículos Médicos y Quirúrgicos',p:52},{n:'Hospitalia Productos Médicos',p:53}],
+  ins:'<b>La más grande que perdiste</b>: 1.483.200 unidades, $50,4M adjudicados. Reutter ganó con $34 frente a tus $47 — un 28% menos. Aquí el precio sí decidió.'},
+ {cod:'4172-30-L124',nom:'Insumos médicos',prod:'Vendas de gasa',qty:20000,cierre:'13 may 2024',gane:0,total:640000,
+  bids:[{n:'Reutter',p:29},{n:'Tú (AP SpA)',p:30,me:1},{n:'Munnich Pharma Medical',p:32,w:1},{n:'Comercial LBF',p:34},{n:'Coldiab',p:36},{n:'Nemo Chile',p:38},{n:'Medicpro',p:38},{n:'Global Healthcare Chile',p:38},{n:'Artículos Médicos y Quirúrgicos',p:45},{n:'SCM Pharma',p:53},{n:'Bruno Moggia y Cía.',p:60},{n:'Dist. y Comerc. L&L',p:62},{n:'Blasdent',p:63},{n:'Ingeniería y Cadena de Suministro',p:66},{n:'Healthstore',p:109}],
+  ins:'Ofertaste $30 — <b>más barato que el ganador</b> (Munnich, $32) — y perdiste igual. Segundo caso donde ser el más barato no bastó.'},
+ {cod:'1057534-33-L125',nom:'Insumos clínicos',prod:'Gasas o curetas quirúrgicas',qty:8000,cierre:'1 sep 2025',gane:0,total:360000,
+  bids:[{n:'Importadora Biotech',p:15},{n:'Flexing Chile',p:45,w:1},{n:'Nemo Chile',p:48},{n:'Tú (AP SpA)',p:48,me:1},{n:'Artículos Médicos y Quirúrgicos',p:50},{n:'JFV',p:51},{n:'Madegom',p:54},{n:'Comercial LBF',p:54},{n:'Munnich Pharma Medical',p:57},{n:'Farmacéutica Caribean',p:60},{n:'Storemed',p:62},{n:'Dist. y Comerc. L&L',p:80},{n:'Global Healthcare Chile',p:85},{n:'Sur',p:110},{n:'SCM Pharma',p:126},{n:'Ingeniería y Cadena de Suministro',p:170},{n:'Central de Compras del Extrasistema',p:593},{n:'Dist. Productos de Laboratorio',p:824}],
+  ins:'Empataste con Nemo en $48; ganó Flexing con <b>$45</b>. Tres pesos de diferencia. Biotech ofertó $15 y no ganó.'},
+ {cod:'3210-33-L123',nom:'Insumos clínicos convenio resolutividad',prod:'Guantes quirúrgicos',qty:3000,cierre:'12 dic 2023',gane:0,total:33800,
+  bids:[{n:'Munnich Pharma Medical',p:16.9,w:1},{n:'Inmed Droguería',p:17},{n:'SCM Pharma',p:18},{n:'Reutter',p:18},{n:'Tú (AP SpA)',p:19,me:1},{n:'Coldiab',p:37},{n:'Comercial Intermédica',p:40},{n:'Dist. Productos de Laboratorio',p:57}],
+  ins:'Perdiste por <b>$2,1</b> en un producto de altísima competencia: 8 oferentes apretados entre $16,9 y $19. En guantes no eres competitivo.'}
 ];
-function renderPost(){document.getElementById('postList').innerHTML=POST.map(function(o){var tag=o.t==='Compra ágil'?'<span style="color:var(--text-accent)">Compra ágil</span>':'Licitación';var me=bidderProbs(o.bidders).filter(function(b){return b.me})[0];return '<div class="row" data-cod="'+o.cod+'"><div style="min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+o.nom+'</div><div style="font-size:12px;color:var(--text-secondary)">'+tag+' · '+money(o.monto)+' · '+o.estado+' · '+o.cod+'</div></div><div class="badge" style="background:var(--bg-accent);color:var(--text-accent)"><div class="n">'+me.prob+'%</div><div class="t">tú ganas</div></div></div>';}).join('');document.querySelectorAll('#postList .row').forEach(function(r){r.onclick=function(){showPost(r.dataset.cod)}});}
-function showPost(cod){var o=POST.filter(function(x){return x.cod===cod})[0];if(!o)return;var bs=bidderProbs(o.bidders).slice().sort(function(a,b){return b.prob-a.prob});var leader=bs[0],meObj=bs.filter(function(b){return b.me})[0],myRank=bs.indexOf(meObj)+1;var col=leader.me?'success':'warning';var advice=leader.me?('<i class="ti ti-crown" style="font-size:15px;vertical-align:-2px;margin-right:4px"></i>Lideras la evaluación con <b>'+meObj.prob+'%</b> — mantén tu oferta.'):('<i class="ti ti-arrow-up" style="font-size:15px;vertical-align:-2px;margin-right:4px"></i>Vas <b>'+myRank+'º de '+bs.length+'</b>. '+leader.name+' lidera con '+leader.prob+'%. Bajar tu oferta ~'+Math.max(1,Math.round((meObj.price-leader.price)/meObj.price*100)+1)+'% te pondría al frente.');document.getElementById('postDetail').innerHTML='<div class="card"><div style="display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:14px"><div><div style="font-size:15px;font-weight:500">'+o.nom+'</div><div style="font-size:12px;color:var(--text-secondary)">'+o.t+' · '+o.cod+' · presupuesto '+money(o.monto)+'</div></div><span class="mchip">'+o.estado+'</span></div><div style="font-size:13px;color:var(--text-secondary);margin-bottom:6px"><i class="ti ti-chart-bar" style="font-size:15px;vertical-align:-2px;margin-right:4px"></i>Probabilidad de ganar · tú vs. competidores que postularon</div>'+probBars(o.bidders)+'<div style="background:var(--bg-'+col+');color:var(--text-'+col+');border-radius:var(--radius);padding:10px 13px;font-size:13px;line-height:1.5;margin-top:14px">'+advice+'</div></div>';}
+document.getElementById('postStats').innerHTML=[['Postulaciones',PSTATS.total],['Adjudicadas',PSTATS.ganadas],['Tasa de éxito',PSTATS.tasa+'%'],['Adjudicado',big(PSTATS.adjudicado)]].map(function(m){return '<div class="metric"><div class="l">'+m[0]+'</div><div class="v">'+m[1]+'</div></div>'}).join('');
+var pf='todas';
+function renderPost(){
+  var list=POST.filter(function(o){return pf==='todas'||(pf==='win'?o.gane:!o.gane)});
+  document.getElementById('postList').innerHTML=list.map(function(o){
+    var c=o.gane?'success':'danger', txt=o.gane?'ganada':'perdida', ic=o.gane?'ti-check':'ti-x';
+    var mine=o.bids.filter(function(b){return b.me})[0], sorted=o.bids.slice().sort(function(a,b){return a.p-b.p}), rank=sorted.indexOf(mine)+1;
+    return '<div class="row" data-cod="'+o.cod+'"><div style="min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+o.nom+'</div><div style="font-size:12px;color:var(--text-secondary)">'+o.prod+' · '+num(o.qty)+' uds · tu oferta '+money(mine.p)+' · '+rank+'º de '+o.bids.length+' · '+o.cod+'</div></div><div class="badge" style="background:var(--bg-'+c+');color:var(--text-'+c+')"><div class="n"><i class="ti '+ic+'" style="font-size:15px"></i></div><div class="t">'+txt+'</div></div></div>';
+  }).join('');
+  document.querySelectorAll('#postList .row').forEach(function(r){r.onclick=function(){showPost(r.dataset.cod)}});
+}
+document.querySelectorAll('#postfilter button').forEach(function(b){b.onclick=function(){pf=b.dataset.f;document.querySelectorAll('#postfilter button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');renderPost();document.getElementById('postDetail').innerHTML='';}});
+function ladder(o){
+  var bs=o.bids.slice().sort(function(a,b){return a.p-b.p}), mx=bs[bs.length-1].p||1;
+  return bs.map(function(b){
+    var col=b.w?'var(--text-success)':(b.me?'var(--fill-accent)':'var(--border-strong)');
+    var lbl=b.w?'<i class="ti ti-crown" style="font-size:13px;color:var(--text-success)"></i> ganó':(b.me?'tú':'');
+    var st=b.me?'font-weight:500;color:var(--text-accent)':(b.w?'font-weight:500;color:var(--text-success)':'color:var(--text-secondary)');
+    return '<div style="display:flex;align-items:center;gap:8px;margin:5px 0"><span style="width:150px;font-size:12px;'+st+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+b.n+'</span><div class="bar" style="flex:1;height:14px"><div style="width:'+Math.max(2,b.p/mx*100)+'%;background:'+col+'"></div></div><span style="width:58px;text-align:right;font-size:12px;'+st+'">'+money(b.p)+'</span><span style="width:44px;font-size:11px;color:var(--text-muted)">'+lbl+'</span></div>';
+  }).join('');
+}
+function showPost(cod){
+  var o=POST.filter(function(x){return x.cod===cod})[0]; if(!o)return;
+  var c=o.gane?'success':'danger';
+  var mine=o.bids.filter(function(b){return b.me})[0], win=o.bids.filter(function(b){return b.w})[0];
+  var sorted=o.bids.slice().sort(function(a,b){return a.p-b.p}), rank=sorted.indexOf(mine)+1;
+  var head=o.gane?('<i class="ti ti-trophy" style="font-size:15px;vertical-align:-2px;margin-right:4px"></i>Adjudicada — '+money(o.total)):('<i class="ti ti-x" style="font-size:15px;vertical-align:-2px;margin-right:4px"></i>No adjudicada — ganó '+win.n+' con '+money(win.p)+' ('+money(o.total)+')');
+  document.getElementById('postDetail').innerHTML='<div class="card">'
+   +'<div style="display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:12px"><div><div style="font-size:15px;font-weight:500">'+o.nom+'</div><div style="font-size:12px;color:var(--text-secondary)">'+o.cod+' · '+o.prod+' · '+num(o.qty)+' unidades · cierre '+o.cierre+'</div></div><span class="mchip">'+o.bids.length+' oferente'+(o.bids.length>1?'s':'')+'</span></div>'
+   +'<div style="background:var(--bg-'+c+');color:var(--text-'+c+');border-radius:var(--radius);padding:10px 13px;font-size:13px;font-weight:500;margin-bottom:16px">'+head+'</div>'
+   +'<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:16px"><div class="metric"><div class="l">Tu oferta</div><div class="v">'+money(mine.p)+'</div></div><div class="metric"><div class="l">Oferta ganadora</div><div class="v">'+money(win.p)+'</div></div><div class="metric"><div class="l">Tu posición</div><div class="v">'+rank+'º de '+o.bids.length+'</div></div></div>'
+   +'<div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px"><i class="ti ti-list-numbers" style="font-size:15px;vertical-align:-2px;margin-right:4px"></i>Todas las ofertas reales, de menor a mayor precio</div>'+ladder(o)
+   +'<div style="border-top:.5px solid var(--border);margin-top:14px;padding-top:14px;font-size:13px;line-height:1.6"><i class="ti ti-bulb" style="font-size:16px;vertical-align:-2px;margin-right:5px;color:var(--text-accent)"></i>'+o.ins+'</div></div>';
+}
 
 /* ---- COMPETENCIA REAL (mismos productos que AP SPA) ---- */
 var SUP=[
@@ -445,9 +514,12 @@ function answer(q){var t=q.toLowerCase();
  if(t.indexOf('competencia')>=0||t.indexOf('competidor')>=0)return 'Tus competidores reales en estos productos son <b>León Borzut</b> ($13.299 M), <b>Reutter</b> ($8.226 M) y <b>Madegom</b> ($7.861 M). Tú vendes $90 M — hay mucho espacio para crecer. Abre Competencia para ver cada ficha.';
  if(t.indexOf('cliente')>=0||t.indexOf('hospital')>=0||t.indexOf('organismo')>=0)return 'Tu mayor cliente es el <b>Servicio de Salud Valparaíso San Antonio</b> (Hospital Claudio Vicuña): te compró <b>$78 M</b> en 16 órdenes, y es además el más confiable (solo 0,98% de anulación).';
  if(t.indexOf('oportunidad')>=0||t.indexOf('licitac')>=0)return 'Hay <b>9 oportunidades abiertas</b> que calzan con tu perfil. La mejor: <b>convenio suministro de sábana desechable</b> por $53.000.000 (score 96).';
- return 'Puedo responder sobre tus precios de referencia (sábanas, gasas, vendas, planas quirúrgicas…), tu competencia y tus oportunidades abiertas. Prueba una sugerencia.';}
+ if(t.indexOf('tasa')>=0||t.indexOf('éxito')>=0||t.indexOf('exito')>=0||t.indexOf('gano')>=0||t.indexOf('gané')>=0)return 'Tu tasa de éxito real es <b>39%</b>: ganaste <b>16 de 41</b> postulaciones, con <b>$237 M</b> adjudicados. Tus dos mayores adjudicaciones (planas quirúrgicas, $104 M) las ganaste <b>sin competencia</b>.';
+ if(t.indexOf('perd')>=0)return 'Perdiste 25 de 41 líneas. Las más dolorosas: <b>gasa estéril</b> ($50,4M — Reutter ganó con $34 vs tus $47) y <b>gasas de droguería</b>, donde <b>perdiste por $1</b> (Nemo $43, tú $44). Y en <b>unidades médicas</b> fuiste el más barato ($895) y perdiste igual contra Qualymed ($1.330).';
+ if(t.indexOf('mesa')>=0||t.indexOf('margen')>=0||t.indexOf('caro')>=0||t.indexOf('barato')>=0)return 'En <b>cubre camillas</b> ganaste con $1.935 y el segundo ofertó $2.254: podías haber cobrado ~$2.250 y ganar igual — <b>dejaste unos $17,2 M sobre la mesa</b>. Ojo también: dos veces fuiste el más barato y perdiste, así que bajar el precio no siempre paga.';
+ return 'Puedo responder sobre tus precios de referencia (sábanas, gasas, vendas, planas quirúrgicas…), tu competencia, tus oportunidades abiertas y tu historial real de postulaciones. Prueba una sugerencia.';}
 function chatSend(q){if(!q)return;addMsg('u',q);window.setTimeout(function(){addMsg('a',answer(q))},220);}
-var SUG=['Precio de las sábanas de hospital','¿Quiénes son mis competidores?','¿Cuál es mi mejor cliente?','Oportunidades abiertas'];
+var SUG=['¿Cuál es mi tasa de éxito?','¿Qué licitaciones perdí y por qué?','¿Dejé dinero sobre la mesa?','¿Cuál es mi mejor cliente?'];
 document.getElementById('chatSug').innerHTML=SUG.map(function(s){return '<button class="chip" data-q="'+s+'">'+s+'</button>'}).join('');
 document.querySelectorAll('#chatSug button').forEach(function(b){b.onclick=function(){chatSend(b.dataset.q)}});
 var ci=document.getElementById('chatInput');
